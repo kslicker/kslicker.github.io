@@ -16,12 +16,17 @@
       color: grey;
     } 
 
-    .fa-ruler:hover {
+    .fa-ruler:hover {    
       color: grey;
     }
 
     .fa-trash:hover {
       color: grey;
+    }
+
+              body{
+      min-width:1000px; // Suppose you want minimum width of 1000px
+      _width: expression( document.body.clientWidth > 1000 ? "1000px" : "auto" ); /* sets max-width for IE6 */
     }
     </style>
   </head>
