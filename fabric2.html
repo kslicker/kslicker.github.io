@@ -31,8 +31,8 @@
         <h1>KDraw</h1>
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center"> 
-        <canvas id="canvaselement" width="740" height="400" style="position: absolute; z-index: 0;"></canvas> 
-	      <canvas id="draw" width="740" height="400" style="position: absolute; z-index: 1;"></canvas>
+        <canvas id="canvaselement" width="740" height="400" style="max-width: 100%; height: auto; z-index: 0;"></canvas> 
+	      <canvas id="draw" width="740" height="400" style="max-width: 100%; height: auto; z-index: 1;"></canvas>
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
         <span style="border: 1px solid silver; border-radius: 0.25em; padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
@@ -45,12 +45,12 @@
 
     <script>
       var videoelement = document.getElementById("videoelement");
-      var streamContraints = {
+      var streamConstraints = {
         facingMode: 'user',
             audio: false,
             'video': {
                 height: 1080,
-                width: 1920,
+                width: 1920
         },
       };
 
@@ -73,7 +73,7 @@
       // Get camera stream
       if (videoelement) {
           navigator.mediaDevices
-          .getUserMedia(streamContraints)
+          .getUserMedia(streamConstraints)
           .then(gotStream)
           .catch(function (e) {
               if (confirm("An error with camera occured:(" + e.name + ") Do you want to reload?")) {
