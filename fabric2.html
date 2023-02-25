@@ -56,6 +56,8 @@
 
       var canvaselement = document.querySelector('#canvaselement');
       var ctx = canvaselement.getContext('2d', { alpha: false });
+      ctx.canvas.width = window.innerWidth;
+      ctx.canvas.height = window.innerHeight;
 
       // create a wrapper around native canvas element (with id="draw")
       var canvas = new fabric.Canvas('draw');
