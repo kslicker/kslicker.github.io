@@ -31,8 +31,8 @@
         <h1>KDraw</h1>
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center"> 
-        <canvas id="canvaselement" width="740" height="400" style="max-width: 100%; height: auto; z-index: 0;"></canvas> 
-	      <canvas id="draw" width="740" height="400" style="max-width: 100%; height: auto; z-index: 1;"></canvas>
+        <canvas id="canvaselement" width="740" height="400" style="max-width: 100%; height: auto; z-index: 0; border:1px solid #000000;"></canvas> 
+	      <canvas id="draw" width="740" height="400" style="max-width: 100%; height: auto; z-index: 1; border:1px solid #000000;"></canvas>
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
         <span style="border: 1px solid silver; border-radius: 0.25em; padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
@@ -59,7 +59,7 @@
       //ctx.canvas.width = window.innerWidth;
       //ctx.canvas.height = window.innerHeight;
 
-      // create a wrapper around native canvas element (with id="draw")
+      // create a wrapper around native canvas element
       var canvas = new fabric.Canvas('draw');
       canvas.isDrawingMode = false;
       fabric.Object.prototype.selectable = false;
