@@ -151,7 +151,6 @@
       // Update distance readout
       line_distance = Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2));
       line.set({ x2: pointer.x, y2: pointer.y });
-      document.getElementById('distance').innerHTML = (line_distance + 'px');
       text.set('text', line_distance + 'px');
       canvas.renderAll();
       });
