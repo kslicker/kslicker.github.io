@@ -47,7 +47,9 @@
       var videoelement = document.getElementById("videoelement");
       var streamConstraints = {facingMode: 'user',
                               audio: false,
-                              video: {height: 1080, width: 1920},
+                              video: {
+                                width: {ideal: 1920},
+                                height: {ideal: 1080}
       };
 
       var canvaselement = document.querySelector('#canvaselement');
