@@ -30,7 +30,7 @@
       <div class="h-100 d-flex align-items-center justify-content-center">
         <h1>K-Draw</h1>
       </div>
-      <div class="container">
+      <div class="h-100 d-flex align-items-center justify-content-center">
           <canvas id="canvaselement" style="width: 100%; position: absolute; z-index: 0; border:2px solid red;"></canvas> 
           <canvas id="draw" style="width: 100%; position: absolute; z-index: 0; border:4px solid yellow;"></canvas>
         </div>
@@ -57,7 +57,10 @@
       var ctx = canvaselement.getContext('2d', { alpha: false });
 
       // create a wrapper around native canvas element
-      var canvas = new fabric.Canvas('draw');
+      var canvas = new fabric.Canvas('draw'{
+        width: 1920,
+        height: 1080,
+      });
       canvas.isDrawingMode = false;
       fabric.Object.prototype.selectable = false;
 
