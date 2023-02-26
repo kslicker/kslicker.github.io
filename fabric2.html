@@ -31,8 +31,8 @@
         <h1>K-Draw</h1>
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center"> 
-          <canvas id="canvaselement" style="position: static; z-index: 0; border:2px solid red;"></canvas> 
-	        <canvas id="draw" style="position: static; z-index: 1; border:2px solid #000000;"></canvas>
+          <canvas id="canvaselement" style="position: absolute; z-index: 0; border:2px solid red;"></canvas> 
+	        <canvas id="draw" style="position: absolute; z-index: 1; border:2px solid #000000;"></canvas>
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
         <span style="border: 1px solid silver; border-radius: 0.25em; padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
@@ -47,7 +47,7 @@
       var videoelement = document.getElementById("videoelement");
       var streamConstraints = {facingMode: 'user',
                               audio: false,
-                              'video': {ideal: {height: 1080,width: 1920}},
+                              'video': {height: 1080,width: 1920},
       };
 
       var canvaselement = document.querySelector('#canvaselement');
