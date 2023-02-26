@@ -52,8 +52,6 @@
 
       var canvaselement = document.querySelector('#canvaselement');
       var ctx = canvaselement.getContext('2d', { alpha: false });
-      //ctx.canvas.width = window.innerWidth;
-      //ctx.canvas.height = window.innerHeight;
 
       // create a wrapper around native canvas element
       var canvas = new fabric.Canvas('draw');
@@ -89,9 +87,9 @@
       }
 
       // Frame rate
-      //canvasInterval = window.setInterval(() => {
-      //    drawImage(videoelement);
-      //}, 1000 / fps);
+      canvasInterval = window.setInterval(() => {
+          drawImage(videoelement);
+      }, 1000 / fps);
 
       // Event listeners
       document.getElementById("select").addEventListener("click", function(){
