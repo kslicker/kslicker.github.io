@@ -23,21 +23,6 @@
     .fa-trash:hover {
       color: grey;
     }
-
-        .video-container {
-      position: relative;
-      padding-bottom: calc(var(--aspect-ratio, .5625) * 100%);
-      height: 0;
-      width: 100%;
-    }
-
-    .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
     </style>
   </head>
   <body> 
@@ -45,11 +30,9 @@
       <div class="h-100 d-flex align-items-center justify-content-center">
         <h1>K-Draw</h1>
       </div>
-      <div class="video-container" style="--aspect-ratio: 2 / 3;">
-          <iframe> 
-            <canvas id="canvaselement"></canvas> 
-	          <canvas id="draw"></canvas>
-          </iframe>
+      <div class="col-xs-6 col-sm-6">
+          <canvas class="col-xs-12" id="canvaselement"></canvas> 
+          <canvas class="col-xs-12" id="draw"></canvas>
         </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
         <span style="border: 1px solid silver; border-radius: 0.25em; padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
