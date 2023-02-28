@@ -58,8 +58,8 @@
 
       // create a wrapper around native canvas element
       var canvas = new fabric.Canvas('draw', {
-        //width: 1280,
-        //height: 720,
+        width: 1280,
+        height: 720,
       });
       canvas.isDrawingMode = false;
       fabric.Object.prototype.selectable = false;
@@ -110,6 +110,10 @@
 
       document.getElementById("clear").addEventListener("click", function(){
         canvas.clear()
+        canvas.setDimensions({
+            width: 400,
+            height: 400
+        });
       })
 
       document.getElementById("measure").addEventListener("click", function(){
