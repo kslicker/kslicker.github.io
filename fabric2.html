@@ -57,7 +57,7 @@
       var canvaselement = document.querySelector('#canvaselement');
       var ctx = canvaselement.getContext('2d', { alpha: false });
 
-      // create a Fabric wrapper around native canvas element
+      // Create a Fabric wrapper around native canvas element
       var canvas = new fabric.Canvas('draw', {
         width: 1920,
         height: 1080,
@@ -66,6 +66,7 @@
       canvas.setDimensions({
             width: canvaselement.getWidth(),
             height: canvaselement.getHeight()
+            console.log(canvaselement.getWidth(), canvaselement.getHeight())
         });
 
       canvas.isDrawingMode = false;
