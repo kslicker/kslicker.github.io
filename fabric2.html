@@ -53,14 +53,21 @@
                               }
       }
 
+      // Create canvas and context for displaying video
       var canvaselement = document.querySelector('#canvaselement');
       var ctx = canvaselement.getContext('2d', { alpha: false });
 
-      // create a wrapper around native canvas element
+      // create a Fabric wrapper around native canvas element
       var canvas = new fabric.Canvas('draw', {
         width: 1920,
         height: 1080,
       });
+
+      canvas.setDimensions({
+            width: canvaselement.getWidth(),
+            height: canvaselement.getHeight()
+        });
+
       canvas.isDrawingMode = false;
       fabric.Object.prototype.selectable = false;
 
@@ -110,10 +117,6 @@
 
       document.getElementById("clear").addEventListener("click", function(){
         canvas.clear()
-        canvas.setDimensions({
-            width: 400,
-            height: 400
-        });
       })
 
       document.getElementById("measure").addEventListener("click", function(){
