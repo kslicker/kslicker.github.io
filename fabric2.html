@@ -64,10 +64,10 @@
       });
 
       canvas.setDimensions({
-            width: canvaselement.width(),
-            height: canvaselement.height()
-            console.log(canvaselement.width(), canvaselement.height())
+            width: canvaselement.width,
+            height: canvaselement.height
         });
+        console.log(canvaselement.width, canvaselement.height);
 
       canvas.isDrawingMode = false;
       fabric.Object.prototype.selectable = false;
