@@ -69,8 +69,6 @@
             height: canvaselement.height
         });
       }
-
-      console.log(canvaselement.width, canvaselement.height);
       
       canvas.isDrawingMode = false;
       fabric.Object.prototype.selectable = false;
@@ -101,12 +99,12 @@
       // Draw camera frame onto canvas
       function drawImage(video) {
           ctx.drawImage(video, 0, 0, canvaselement.width, canvaselement.height);
-          adjustCanvasSize();
       }
 
       // Frame rate
       canvasInterval = window.setInterval(() => {
           drawImage(videoelement);
+          adjustCanvasSize();
       }, 1000 / fps);
 
       // Event listeners
