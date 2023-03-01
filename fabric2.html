@@ -48,8 +48,8 @@
       var streamConstraints = {facingMode: 'user',
                               audio: false,
                               video: {
-                                width: 1280,
-                                height: 720
+                                width: 1024,
+                                height: 640
                               }
       }
 
@@ -61,14 +61,17 @@
       var canvas = new fabric.Canvas('draw', {
       });
 
-      canvas.setDimensions({
-            width: canvaselement.scrollWidth,
-            height: canvaselement.scrollHeight
+      // Adjust fabric canvas to dimension of video canvas
+
+      function adjustCanvasSize(){
+          canvas.setDimensions({
+            width: canvaselement.width,
+            height: canvaselement.height
         });
+      }
 
-    
-      console.log(canvaselement.scrollWidth, canvaselement.scrollHeight);
-
+      console.log(canvaselement.width, canvaselement.height);
+      
       canvas.isDrawingMode = false;
       fabric.Object.prototype.selectable = false;
 
@@ -98,6 +101,7 @@
       // Draw camera frame onto canvas
       function drawImage(video) {
           ctx.drawImage(video, 0, 0, canvaselement.width, canvaselement.height);
+          adjustCanvasSize();
       }
 
       // Frame rate
