@@ -99,6 +99,10 @@
       // Draw camera frame onto canvas
       function drawImage(video) {
           ctx.drawImage(video, 0, 0, canvaselement.width, canvaselement.height);
+          canvas.setDimensions({
+            width: canvaselement.width,
+            height: canvaselement.height
+        });
       }
 
       // Frame rate
