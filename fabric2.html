@@ -92,14 +92,12 @@
       function drawImage(video) {
           ctx.drawImage(video, 0, 0, canvaselement.width, canvaselement.height);
           // Adjust fabric canvas size to match video canvas
-          //draw_canvas.setDimensions({
-            //width: canvaselement.width,
-            //height: canvaselement.height
-        //});
+          canvas.setDimensions({
+            width: draw_canvas.width,
+            height: draw_canvas.height
+            });
         console.log(draw_canvas.width);
-        canvas.setHeight(draw_canvas.height);
-        canvas.setWidth(draw_canvas.width);
-        canvas.renderAll();
+    
       }
 
       // Frame rate
