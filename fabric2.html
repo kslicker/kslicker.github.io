@@ -57,7 +57,8 @@
       var canvaselement = document.querySelector('#canvaselement');
       var ctx = canvaselement.getContext('2d', { alpha: false });
 
-      // Create a Fabric wrapper around native canvas element
+      // Create a Fabric wrapper around native canvas element and query selector for canvas dimensions
+      var draw_canvas = document.querySelector('#draw');
       var canvas = new fabric.Canvas('draw', {
       });
       
@@ -91,13 +92,13 @@
       function drawImage(video) {
           ctx.drawImage(video, 0, 0, canvaselement.width, canvaselement.height);
           // Adjust fabric canvas size to match video canvas
-          //canvas.setDimensions({
-         //   width: canvaselement.width,
-         //   height: canvaselement.height
+          //draw_canvas.setDimensions({
+            //width: canvaselement.width,
+            //height: canvaselement.height
         //});
-        console.log(canvaselement.width);
-        canvas.setHeight(canvaselement.height);
-        canvas.setWidth(canvaselement.width);
+        console.log(draw_canvas.width);
+        canvas.setHeight(draw_canvas.height);
+        canvas.setWidth(draw_canvas.width);
         canvas.renderAll();
       }
 
