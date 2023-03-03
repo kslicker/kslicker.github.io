@@ -30,7 +30,7 @@
       <div class="h-100 d-flex align-items-center justify-content-center">
         <h1>K-Draw</h1>
       </div>
-      <div class="h-100 d-flex align-items-center justify-content-center">
+      <div id="myDiv" class="h-100 d-flex align-items-center justify-content-center">
           <canvas id="canvaselement" width="1024" height="640" style="width: 100%; z-index: 0; border:4px solid red;"></canvas> 
           <canvas id="draw" width="1024" height="640" style="width: 100%; z-index: 1; border:4px solid yellow;"></canvas>
         </div>
@@ -97,13 +97,9 @@
 
       // Update Fabric canvas size
       function responsive() {
-        var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-        var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
-        var widthn = width - 100;
-        var heightn = height - 100;
         canvas.setDimensions({
-            width: widthn,
-            height: heightn
+            width: document.getElementById('myDiv').clientWidth,
+            height: document.getElementById('myDiv').clientHeight
         });  
     }
 
