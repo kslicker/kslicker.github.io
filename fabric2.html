@@ -53,8 +53,8 @@
         <span style="padding: 0.5em;"><i id="white" class="fa-regular fa-circle fa-2xl" title="white"></i></span>
       </div>
   
-    <script src="https://unpkg.com/fabric@5.3.0/dist/fabric.min.js"></script>
-
+    //<script src="https://unpkg.com/fabric@5.3.0/dist/fabric.min.js"></script>
+    <script src="fabric.js"></script>
     <script>
       var videoelement = document.getElementById("videoelement");
       var streamConstraints = {facingMode: 'user',
@@ -142,6 +142,11 @@
         canvas.isDrawingMode = false;
       })
 
+      document.getElementById("eraser").addEventListener("click", function(){
+         canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
+         canvas.isDrawingMode = true;
+      })
+
       document.getElementById("blue").addEventListener("click", function(){
         stroke_colour = 'blue';
       })
@@ -172,7 +177,7 @@
       x1 = pointer.x;
       y1 = pointer.y;
       line = new fabric.Line(points, {
-          strokeWidth: 5,
+          strokeWidth: 2,
           strokeLineCap: "square",
           stroke: stroke_colour,
           strokeUniform: true,
