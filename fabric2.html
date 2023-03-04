@@ -24,7 +24,7 @@
       color: grey;
     }
 
-    .fa-circle:hover {
+    .fa-eraser:hover {
       color: grey;
     }
     </style>
@@ -42,10 +42,15 @@
         <span style="padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
         <span style="padding: 0.5em;"><i id="sketch" class="fa-solid fa-pencil fa-2xl" title="sketch"></i></span>
         <span style="padding: 0.5em;"><i id="measure" class="fa-solid fa-ruler fa-2xl" title="measure"></i></span>
+        <span style="padding: 0.5em;"><i id="eraser" class="fa-solid fa-eraser fa-2xl" title="eraser"></i></span>
         <span style="padding: 0.5em;"><i id="clear" class="fa-solid fa-trash fa-2xl" title="clear"></i></span>
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
         <span style="padding: 0.5em;"><i id="red" class="fa-solid fa-circle fa-2xl" style="color:red" title="red"></i></span>
+        <span style="padding: 0.5em;"><i id="green" class="fa-solid fa-circle fa-2xl" style="color:green" title="green"></i></span>
+        <span style="padding: 0.5em;"><i id="blue" class="fa-solid fa-circle fa-2xl" style="color:blue" title="blue"></i></span>
+        <span style="padding: 0.5em;"><i id="black" class="fa-solid fa-circle fa-2xl" style="color:black" title="black"></i></span>
+        <span style="padding: 0.5em;"><i id="white" class="fa-regular fa-circle fa-2xl" title="white"></i></span>
       </div>
   
     <script src="https://unpkg.com/fabric@5.3.0/dist/fabric.min.js"></script>
@@ -55,8 +60,8 @@
       var streamConstraints = {facingMode: 'user',
                               audio: false,
                               video: {
-                                width: 1920,
-                                height: 1080
+                                width: 1280,
+                                height: 720
                               }
       }
 
@@ -77,6 +82,7 @@
       let measuring = false;
       var line = null;
       var line_distance = 0;
+      var stroke_colour = 'black';
 
       // Get camera stream
       if (videoelement) {
@@ -124,6 +130,7 @@
       document.getElementById("sketch").addEventListener("click", function(){
         measuring = false;
         canvas.isDrawingMode = true;
+        canvas.freeDrawingBrush.color = stroke_colour;
       })
 
       document.getElementById("clear").addEventListener("click", function(){
@@ -133,6 +140,26 @@
       document.getElementById("measure").addEventListener("click", function(){
         measuring = true;
         canvas.isDrawingMode = false;
+      })
+
+      document.getElementById("blue").addEventListener("click", function(){
+        stroke_colour = 'blue';
+      })
+
+      document.getElementById("red").addEventListener("click", function(){
+        stroke_colour = 'red';
+      })
+
+      document.getElementById("green").addEventListener("click", function(){
+        stroke_colour = 'green';
+      })
+
+      document.getElementById("black").addEventListener("click", function(){
+        stroke_colour = 'black';
+      })
+
+      document.getElementById("white").addEventListener("click", function(){
+        stroke_colour = 'white';
       })
 
       // Measure line
@@ -147,7 +174,7 @@
       line = new fabric.Line(points, {
           strokeWidth: 5,
           strokeLineCap: "square",
-          stroke: 'red',
+          stroke: stroke_colour,
           strokeUniform: true,
           selectable: true,
           scalable: false,
