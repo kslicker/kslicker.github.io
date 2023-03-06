@@ -36,7 +36,7 @@
       </div>
       <div id="myDiv" class="h-100 d-flex align-items-center justify-content-center">
           <canvas id="canvaselement" width="1000" height="600" style="position: absolute; width: 50%; z-index: 0;"></canvas> 
-          <canvas id="draw" width="1000" height="600" style="position: absolute; width: 100%; z-index: 1;"></canvas>
+          <canvas id="draw" width="1000" height="600" style="position: absolute; width: 50%; z-index: 1;"></canvas>
         </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
         <span style="padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
@@ -51,6 +51,10 @@
         <span style="padding: 0.5em;"><i id="blue" class="fa-solid fa-circle fa-2xl" style="color:blue" title="blue"></i></span>
         <span style="padding: 0.5em;"><i id="black" class="fa-solid fa-circle fa-2xl" style="color:black" title="black"></i></span>
         <span style="padding: 0.5em;"><i id="white" class="fa-regular fa-circle fa-2xl" title="white"></i></span>
+      </div>
+      <div class="h-100 d-flex align-items-center justify-content-center">
+        Thickness: <span id="outputVar"></span>
+        <input type="range" min="5" max="100" value="5" class="slider" id="thickness" style="width:50%;">
       </div>
   
     <script src="fabric.js"></script>
@@ -127,9 +131,10 @@
       })
 
       document.getElementById("sketch").addEventListener("click", function(){
+        canvas.freeDrawingBrush.width = 5;
         measuring = false;
         canvas.isDrawingMode = true;
-        canvas.freeDrawingBrush.color = stroke_colour;
+        console.log(stroke_colour);
       })
 
       document.getElementById("clear").addEventListener("click", function(){
@@ -143,28 +148,42 @@
 
       document.getElementById("eraser").addEventListener("click", function(){
          canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
+         canvas.freeDrawingBrush.width = 5;
          canvas.isDrawingMode = true;
       })
 
       document.getElementById("blue").addEventListener("click", function(){
         stroke_colour = 'blue';
+        canvas.freeDrawingBrush.color = 'blue';
+        console.log(stroke_colour);
       })
 
       document.getElementById("red").addEventListener("click", function(){
         stroke_colour = 'red';
+        canvas.freeDrawingBrush.color = 'red';
       })
 
       document.getElementById("green").addEventListener("click", function(){
         stroke_colour = 'green';
+        canvas.freeDrawingBrush.color = 'green';
       })
 
       document.getElementById("black").addEventListener("click", function(){
         stroke_colour = 'black';
+        canvas.freeDrawingBrush.color = 'black';
       })
 
       document.getElementById("white").addEventListener("click", function(){
         stroke_colour = 'white';
+        canvas.freeDrawingBrush.color = 'white';
       })
+
+      // Update thickness slider value
+      var thickness_slider = document.getElementById("thickness");
+      thickness_slider.addEventListener("input", function() {
+          document.getElementById("outputVar").innerHTML = thickness_slider.value;
+          canvas.freeDrawingBrush.width = thickness_slider.value;
+      }) 
 
       // Measure line
       canvas.on('mouse:down', function(o) {
@@ -176,7 +195,7 @@
       x1 = pointer.x;
       y1 = pointer.y;
       line = new fabric.Line(points, {
-          strokeWidth: 2,
+          strokeWidth: 5,
           strokeLineCap: "square",
           stroke: stroke_colour,
           strokeUniform: true,
@@ -192,7 +211,7 @@
             width: 50,
             selectable: true,
             fontSize: 18,
-            fill: "#fff",
+            fill: stroke_colour,
           });
       canvas.add(text);
       });
