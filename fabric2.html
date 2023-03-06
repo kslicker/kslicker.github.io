@@ -54,7 +54,7 @@
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
         Thickness: <span id="outputVar"></span>
-        <input type="range" min="5" max="100" value="5" class="slider" id="thickness" style="width:50%;">
+        <input type="range" min="1" max="15" value="5" class="slider" id="thickness" style="width:50%;">
       </div>
   
     <script src="fabric.js"></script>
@@ -131,10 +131,11 @@
       })
 
       document.getElementById("sketch").addEventListener("click", function(){
-        canvas.freeDrawingBrush.width = 5;
+        canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+        canvas.freeDrawingBrush.width = thickness_slider.value;
+        canvas.freeDrawingBrush.color = stroke_colour;
         measuring = false;
         canvas.isDrawingMode = true;
-        console.log(stroke_colour);
       })
 
       document.getElementById("clear").addEventListener("click", function(){
@@ -148,14 +149,13 @@
 
       document.getElementById("eraser").addEventListener("click", function(){
          canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
-         canvas.freeDrawingBrush.width = 5;
+         canvas.freeDrawingBrush.width = thickness_slider.value;
          canvas.isDrawingMode = true;
       })
 
       document.getElementById("blue").addEventListener("click", function(){
         stroke_colour = 'blue';
         canvas.freeDrawingBrush.color = 'blue';
-        console.log(stroke_colour);
       })
 
       document.getElementById("red").addEventListener("click", function(){
@@ -231,6 +231,14 @@
       if (!measuring) return;
         canvas.isDrawingMode = false;
         line.setCoords();
+
+        // Create group to keep line and text together
+        //canvas.remove(line);
+        //canvas.remove(text);
+        //var group = new fabric.Group();
+        //group.addWithUpdate(line);
+        //group.addWithUpdate(text);
+        //canvas.add(group);
       });
 
       canvas.on('object:moving', function(o){
