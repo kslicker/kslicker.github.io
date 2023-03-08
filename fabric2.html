@@ -27,6 +27,10 @@
     .fa-eraser:hover {
       color: grey;
     }
+
+    .fa-circle-notch:hover {
+      color: grey;
+    }
     </style>
   </head>
   <body> 
@@ -42,6 +46,7 @@
         <span style="padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
         <span style="padding: 0.5em;"><i id="sketch" class="fa-solid fa-pencil fa-2xl" title="sketch"></i></span>
         <span style="padding: 0.5em;"><i id="measure" class="fa-solid fa-ruler fa-2xl" title="measure"></i></span>
+        <span style="padding: 0.5em"><i id="circle" class="fa-solid fa-circle-notch fa-2xl" title="circle"></i></span>
         <span style="padding: 0.5em;"><i id="eraser" class="fa-solid fa-eraser fa-2xl" title="eraser"></i></span>
         <span style="padding: 0.5em;"><i id="clear" class="fa-solid fa-trash fa-2xl" title="clear"></i></span>
       </div>
@@ -83,8 +88,10 @@
       var canvasInterval = null;
       var fps=60;
       let measuring = false;
+      let circle = false;
       var line = null;
       var line_distance = 0;
+      var circle_diameter = 0;
       var stroke_colour = 'black';
 
       // Get camera stream
@@ -127,6 +134,7 @@
       // Event listeners
       document.getElementById("select").addEventListener("click", function(){
         measuring = false;
+        circle = false;
         canvas.isDrawingMode = false;
       })
 
@@ -144,6 +152,12 @@
 
       document.getElementById("measure").addEventListener("click", function(){
         measuring = true;
+        canvas.isDrawingMode = false;
+      })
+
+      document.getElementById("circle").addEventListener("click", function(){
+        circle = true;
+        measuring = false;
         canvas.isDrawingMode = false;
       })
 
@@ -245,6 +259,49 @@
         measuring = false;
       });
 
+      // Circle
+      canvas.on('mouse:down', function(o) {
+      if (!circle) return;
+      canvas.isDrawingMode = true;
+      var drawingCircle = true;
+      var pointer = canvas.getPointer(o.e);
+      x1 = pointer.x;
+      y1 = pointer.y;
+      circle = new fabric.Circle({
+          radius: 1,  
+          left: x1, top: y1,
+          stroke: stroke_colour,
+          fill: 'transparent',
+          selectable: true
+      });
+      canvas.add(circle);
+      text = new fabric.Textbox(circle_diameter + 'px', { 
+            left: x1, 
+            top: y1,
+            width: 50,
+            selectable: true,
+            fontSize: 18,
+            fill: stroke_colour,
+          });
+      canvas.add(text);
+      });
+
+      canvas.on('mouse:move', function(o) {
+      if (!circle) return; 
+      if (!canvas.isDrawingMode) return;
+      pointer = canvas.getPointer(o.e);
+      // Update distance readout
+      circle_diameter = Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2));
+      circle.set('radius', circle_diameter / 2);
+      text.set('text', Math.round(circle_diameter / 2) + 'px');
+      canvas.renderAll();
+      });
+
+      canvas.on('mouse:up', function(o) {
+      if (!circle) return;
+        canvas.isDrawingMode = false;
+        circle.setCoords();
+      });
     </script>
   </body>
 </html>
