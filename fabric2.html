@@ -39,8 +39,8 @@
         <h1>K-Draw</h1>
       </div>
       <div id="myDiv" class="h-100 d-flex align-items-center justify-content-center">
-          <canvas id="canvaselement" width="1000" height="600" style="position: absolute; width: 100%; z-index: 0;"></canvas> 
-          <canvas id="draw" width="1000" height="600" style="position: absolute; width: 100%; z-index: 1;"></canvas>
+          <canvas id="canvaselement" width="1000" height="600" style="position: absolute; width: 50%; z-index: 0;"></canvas> 
+          <canvas id="draw" width="1000" height="600" style="position: absolute; width: 50%; z-index: 1;"></canvas>
         </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
         <span style="padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
@@ -244,7 +244,7 @@
       line.set({ x2: pointer.x, y2: pointer.y });
       text.set('text', line_distance + 'px');
       // Update coord readout
-      document.getElementById("coords").innerHTML = (pointer.y);
+      document.getElementById("coords").innerHTML = (pointer.x);
       canvas.renderAll();
       });
 
@@ -272,10 +272,20 @@
       canvas.isDrawingMode = true;
       var drawingCircle = true;
       var pointer = canvas.getPointer(o.e);
+      var target = canvas.findTarget(o.e);
+      console.log(target);
+      // If an object is found, select it instead of drawing circle
+      if (target && target.selectable){
+        canvas.setActiveObject(target);
+        drawingCircle = false;
+        canvas.isDrawingMode = false;
+        return;
+      }
+
       x1 = pointer.x;
       y1 = pointer.y;
       circle = new fabric.Circle({
-          radius: 1,  
+          radius: 0,  
           left: x1, top: y1,
           stroke: stroke_colour,
           fill: 'transparent',
@@ -288,6 +298,7 @@
             top: y1,
             width: 50,
             selectable: true,
+            scalable: false,
             fontSize: 18,
             fill: stroke_colour,
           });
@@ -298,10 +309,21 @@
       if (!circle) return; 
       if (!canvas.isDrawingMode) return;
       pointer = canvas.getPointer(o.e);
-      // Update distance readout
-      circle_diameter = Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2));
-      circle.set('radius', circle_diameter / 2);
-      text.set('text', Math.round(circle_diameter / 2) + 'px');
+      canvas.setActiveObject(circle);
+      // Check pointer location versus origin to determine which direction the circle should be drawn
+      if(x1 > pointer.x){
+        circle.set({left: Math.abs(pointer.x)});
+      }
+
+      if(y1 > pointer.y){
+        circle.set({top: Math.abs(pointer.y)});
+      }
+
+      line_distance = Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2));
+      console.log(line_distance);
+      circle.set({radius: line_distance});
+
+      text.set('text', Math.round(line_distance) + 'px');
       // Update coord readout
       document.getElementById("coords").innerHTML = pointer.x;
       canvas.renderAll();
