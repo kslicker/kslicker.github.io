@@ -214,21 +214,31 @@
       x1 = pointer.x;
       y1 = pointer.y;
       line = new fabric.Line(points, {
-          strokeWidth: 5,
+          strokeWidth: 2,
           strokeLineCap: "square",
           stroke: stroke_colour,
           strokeUniform: true,
-          selectable: true,
+          selectable: false,
+          hasControls: false,
           scalable: false,
           originX: 'center',
-          originY: 'center'
+          originY: 'center',
+        });
+      anchor1 = new fabric.Circle({
+          radius: 5, stroke: stroke_colour, fill: 'transparent', left: pointer.x - 5, top: pointer.y - 5
+        });
+      anchor2 = new fabric.Circle({
+        radius: 5, stroke: stroke_colour, fill: 'transparent', left: pointer.x - 5, top: pointer.y - 5
       });
+      canvas.add(anchor1);
+      canvas.add(anchor2);
       canvas.add(line);
       text = new fabric.Textbox(line_distance + 'px', { 
             left: x1, 
             top: y1,
             width: 50,
-            selectable: true,
+            selectable: false,
+            hasControls: false,
             fontSize: 18,
             fill: stroke_colour,
           });
@@ -241,6 +251,7 @@
       pointer = canvas.getPointer(o.e);
       // Update distance readout
       line_distance = Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2));
+      anchor2.set({left: pointer.x - 5, top: pointer.y - 5})
       line.set({ x2: pointer.x, y2: pointer.y });
       text.set('text', line_distance + 'px');
       // Update coord readout
