@@ -62,7 +62,7 @@
         <input type="range" min="1" max="15" value="5" class="slider" id="thickness" style="width:50%;">
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
-        Coords: <span id="coords"></span>
+        <span id="coords"></span>
       </div>
   
     <script src="fabric.js"></script>
@@ -230,8 +230,34 @@
       anchor2 = new fabric.Circle({
         radius: 5, stroke: stroke_colour, fill: 'transparent', left: pointer.x - 5, top: pointer.y - 5
       });
+      endline1 = new fabric.Line(points, {
+        strokeWidth: 2,
+          strokeLineCap: "square",
+          stroke: stroke_colour,
+          strokeUniform: true,
+          selectable: false,
+          hasControls: false,
+          scalable: false,
+          originX: 'center',
+          originY: 'center',
+      });
+
+      endline2 = new fabric.Line(points, {
+        strokeWidth: 2,
+          strokeLineCap: "square",
+          stroke: stroke_colour,
+          strokeUniform: true,
+          selectable: false,
+          hasControls: false,
+          scalable: false,
+          originX: 'center',
+          originY: 'center',
+      });
+
       canvas.add(anchor1);
       canvas.add(anchor2);
+      canvas.add(endline1);
+      canvas.add(endline2);
       canvas.add(line);
       text = new fabric.Textbox(line_distance + 'px', { 
             left: x1, 
@@ -240,37 +266,65 @@
             selectable: false,
             hasControls: false,
             fontSize: 18,
+            fontFamily: "Helvetica",
             fill: stroke_colour,
           });
       canvas.add(text);
       });
 
       canvas.on('mouse:move', function(o) {
+      // If measuring not true exit function
       if (!measuring) return; 
+
+      // If drawing mode not true exit function
       if (!canvas.isDrawingMode) return;
+
+      // Create variable to get pointer event
       pointer = canvas.getPointer(o.e);
-      // Update distance readout
+
+      // Calculate slope of line drawn
+      slope = (pointer.y - y1) / (pointer.x - x1);
+
+      // Calculate endline slope (negative reciprocal of slope)
+      endline_slope = -1 / slope;
+      
+      // Calculate line distance drawn
       line_distance = Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2));
+
+      // Reposition anchor when mouse is moved
       anchor2.set({left: pointer.x - 5, top: pointer.y - 5})
+
+      // Reposition line when mouse is moved
       line.set({ x2: pointer.x, y2: pointer.y });
+
+      // Reposition endlines when mouse is moved
+      yIntercept2 = pointer.y - endline_slope * pointer.x;
+      perpY2 = endline_slope * pointer.x + yIntercept2;
+      endlineX = pointer.x + 10 / Math.sqrt(1 + endline_slope ** 2);
+      endlineX2 = pointer.x - 10 / Math.sqrt(1 + endline_slope ** 2);
+      endline2.set({x1: endlineX, y1: pointer.y + endline_slope * (endlineX - pointer.x), x2: endlineX2, y2: pointer.y + endline_slope * (endlineX2 - pointer.x)});
+      
+      yIntercept1 = y1 - endline_slope * x1;
+      perpY1 = endline_slope * x1 + yIntercept1;
+      endlineX3 = x1 + 10 / Math.sqrt(1 + endline_slope ** 2);
+      endlineX4 = x1 - 10 / Math.sqrt(1 + endline_slope ** 2);
+      endline1.set({x1: endlineX3, y1: y1 + endline_slope * (endlineX3 - x1), x2: endlineX4, y2: y1 + endline_slope * (endlineX4 - x1)});
+
+      // Update distance value 
       text.set('text', line_distance + 'px');
+
       // Update coord readout
-      document.getElementById("coords").innerHTML = (pointer.x);
+      document.getElementById("coords").innerHTML = "Coordinates: (" + Math.round(pointer.x) + "," + Math.round(pointer.y) + ")";
+
+      // Update canvas with changes
       canvas.renderAll();
       });
 
+      // Mouse Up functions
       canvas.on('mouse:up', function(o) {
       if (!measuring) return;
         canvas.isDrawingMode = false;
         line.setCoords();
-
-        // Create group to keep line and text together
-        //canvas.remove(line);
-        //canvas.remove(text);
-        //var group = new fabric.Group();
-        //group.addWithUpdate(line);
-        //group.addWithUpdate(text);
-        //canvas.add(group);
       });
 
       canvas.on('object:moving', function(o){
