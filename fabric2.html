@@ -299,13 +299,11 @@
 
       // Reposition endlines when mouse is moved
       yIntercept2 = pointer.y - endline_slope * pointer.x;
-      perpY2 = endline_slope * pointer.x + yIntercept2;
       endlineX = pointer.x + 10 / Math.sqrt(1 + endline_slope ** 2);
       endlineX2 = pointer.x - 10 / Math.sqrt(1 + endline_slope ** 2);
       endline2.set({x1: endlineX, y1: pointer.y + endline_slope * (endlineX - pointer.x), x2: endlineX2, y2: pointer.y + endline_slope * (endlineX2 - pointer.x)});
       
       yIntercept1 = y1 - endline_slope * x1;
-      perpY1 = endline_slope * x1 + yIntercept1;
       endlineX3 = x1 + 10 / Math.sqrt(1 + endline_slope ** 2);
       endlineX4 = x1 - 10 / Math.sqrt(1 + endline_slope ** 2);
       endline1.set({x1: endlineX3, y1: y1 + endline_slope * (endlineX3 - x1), x2: endlineX4, y2: y1 + endline_slope * (endlineX4 - x1)});
@@ -314,7 +312,7 @@
       text.set('text', line_distance + 'px');
 
       // Update coord readout
-      document.getElementById("coords").innerHTML = "Coordinates: (" + Math.round(pointer.x) + "," + Math.round(pointer.y) + ")";
+      document.getElementById("coords").innerHTML = "Coordinates: X:" + Math.round(pointer.x) + ", Y:" + Math.round(pointer.y);
 
       // Update canvas with changes
       canvas.renderAll();
