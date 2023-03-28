@@ -31,6 +31,10 @@
     .fa-circle-notch:hover {
       color: grey;
     }
+
+    .fa-play:hover {
+      color: grey;
+    }
     </style>
   </head>
   <body> 
@@ -49,6 +53,7 @@
         <span style="padding: 0.5em"><i id="circle" class="fa-solid fa-circle-notch fa-2xl" title="circle"></i></span>
         <span style="padding: 0.5em;"><i id="eraser" class="fa-solid fa-eraser fa-2xl" title="eraser"></i></span>
         <span style="padding: 0.5em;"><i id="clear" class="fa-solid fa-trash fa-2xl" title="clear"></i></span>
+        <span style="padding: 0.5em;"><i id="play" class="fa-solid fa-pause fa-2xl" title="play"></i></span>
       </div>
       <div class="h-100 d-flex align-items-center justify-content-center">
         <span style="padding: 0.5em;"><i id="red" class="fa-solid fa-circle fa-2xl" style="color:red" title="red"></i></span>
@@ -96,6 +101,7 @@
       var line_distance = 0;
       var circle_diameter = 0;
       var stroke_colour = 'black';
+      var play = true;
 
       // Get camera stream
       if (videoelement) {
@@ -108,6 +114,7 @@
               }
           });
       }
+
       //if stream found 
       function gotStream(stream) {
           videoelement.srcObject = stream 
@@ -115,8 +122,8 @@
       }
 
       // Draw camera frame onto canvas
-      function drawImage(video) {
-          ctx.drawImage(video, 0, 0, canvaselement.width, canvaselement.height);
+       function drawImage(video) {
+         ctx.drawImage(video, 0, 0, canvaselement.width, canvaselement.height);
           // Adjust fabric canvas size to match video canvas
           responsive();
       }
@@ -130,9 +137,11 @@
     }
 
       // Frame rate
-      canvasInterval = window.setInterval(() => {
-          drawImage(videoelement);
-      }, 1000 / fps);
+        canvasInterval = window.setInterval(() => {
+            if (play){
+              drawImage(videoelement);
+            }
+        }, 1000 / fps);
 
       // Event listeners
       document.getElementById("select").addEventListener("click", function(){
@@ -170,6 +179,18 @@
          canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
          canvas.freeDrawingBrush.width = thickness_slider.value;
          canvas.isDrawingMode = true;
+         measuring = false;
+      })
+
+      document.getElementById("play").addEventListener("click", function(){
+        // Handle play/pause functionality and button change
+        if (play == true){
+          play = false;
+          document.getElementById("play").className = "fa-solid fa-play fa-2xl";
+        } else {
+          play = true;
+          document.getElementById("play").className = "fa-solid fa-pause fa-2xl";
+        }
       })
 
       document.getElementById("blue").addEventListener("click", function(){
@@ -206,13 +227,30 @@
 
       // Measure line
       canvas.on('mouse:down', function(o) {
+      
+      // Check if an object is clicked
+      var obj = canvas.getActiveObject();
+      if (obj && obj.type === 'line'){
+        console.log("gotcha!");
+      }
+
+      // Exit function if measure mode not selected
       if (!measuring) return;
+      
+      // Drawing mode must be true to allow drawing shapes
       canvas.isDrawingMode = true;
-      var drawingLine = true;
+      
+      // Variable for mouse pointer location
       var pointer = canvas.getPointer(o.e);
+
+      // Store array of points to start line
       var points = [pointer.x, pointer.y, pointer.x, pointer.y];
+
+      // Variable for starting co-ordinates which we will use later
       x1 = pointer.x;
       y1 = pointer.y;
+
+      // Create new line
       line = new fabric.Line(points, {
           strokeWidth: 2,
           strokeLineCap: "square",
@@ -224,12 +262,18 @@
           originX: 'center',
           originY: 'center',
         });
+
+      // Create anchor point
       anchor1 = new fabric.Circle({
           radius: 5, stroke: stroke_colour, fill: 'transparent', left: pointer.x - 5, top: pointer.y - 5
         });
+
+      // Create second anchor point
       anchor2 = new fabric.Circle({
         radius: 5, stroke: stroke_colour, fill: 'transparent', left: pointer.x - 5, top: pointer.y - 5
       });
+
+      // Create endline
       endline1 = new fabric.Line(points, {
         strokeWidth: 2,
           strokeLineCap: "square",
@@ -242,6 +286,7 @@
           originY: 'center',
       });
 
+      // Create second endline
       endline2 = new fabric.Line(points, {
         strokeWidth: 2,
           strokeLineCap: "square",
@@ -254,11 +299,14 @@
           originY: 'center',
       });
 
+      // Add items to canvas
       canvas.add(anchor1);
       canvas.add(anchor2);
       canvas.add(endline1);
       canvas.add(endline2);
       canvas.add(line);
+
+      // Create text for pixel readout
       text = new fabric.Textbox(line_distance + 'px', { 
             left: x1, 
             top: y1,
@@ -272,6 +320,7 @@
       canvas.add(text);
       });
 
+      // When mouse is moved
       canvas.on('mouse:move', function(o) {
       // If measuring not true exit function
       if (!measuring) return; 
@@ -287,6 +336,7 @@
 
       // Calculate endline slope (negative reciprocal of slope)
       endline_slope = -1 / slope;
+      console.log(slope, endline_slope, x1, y1, pointer.x, pointer.y);
       
       // Calculate line distance drawn
       line_distance = Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2));
@@ -297,16 +347,21 @@
       // Reposition line when mouse is moved
       line.set({ x2: pointer.x, y2: pointer.y });
 
-      // Reposition endlines when mouse is moved
-      yIntercept2 = pointer.y - endline_slope * pointer.x;
-      endlineX = pointer.x + 10 / Math.sqrt(1 + endline_slope ** 2);
-      endlineX2 = pointer.x - 10 / Math.sqrt(1 + endline_slope ** 2);
-      endline2.set({x1: endlineX, y1: pointer.y + endline_slope * (endlineX - pointer.x), x2: endlineX2, y2: pointer.y + endline_slope * (endlineX2 - pointer.x)});
-      
-      yIntercept1 = y1 - endline_slope * x1;
-      endlineX3 = x1 + 10 / Math.sqrt(1 + endline_slope ** 2);
-      endlineX4 = x1 - 10 / Math.sqrt(1 + endline_slope ** 2);
-      endline1.set({x1: endlineX3, y1: y1 + endline_slope * (endlineX3 - x1), x2: endlineX4, y2: y1 + endline_slope * (endlineX4 - x1)});
+      // Reposition endlines when mouse is moved, when slope is 0 set endlines manually as negative infinity is the result from (-1 / 0)
+      if (slope == 0){
+        endline1.set({x1: x1, y1: y1 - 10, x2: x1, y2: y1 + 10});
+        endline2.set({x1: pointer.x, y1: pointer.y - 10, x2: pointer.x, y2: pointer.y + 10});
+      } else {
+        yIntercept2 = pointer.y - endline_slope * pointer.x;
+        endlineX = pointer.x + 10 / Math.sqrt(1 + endline_slope ** 2);
+        endlineX2 = pointer.x - 10 / Math.sqrt(1 + endline_slope ** 2);
+        endline2.set({x1: endlineX, y1: pointer.y + endline_slope * (endlineX - pointer.x), x2: endlineX2, y2: pointer.y + endline_slope * (endlineX2 - pointer.x)});
+        
+        yIntercept1 = y1 - endline_slope * x1;
+        endlineX3 = x1 + 10 / Math.sqrt(1 + endline_slope ** 2);
+        endlineX4 = x1 - 10 / Math.sqrt(1 + endline_slope ** 2);
+        endline1.set({x1: endlineX3, y1: y1 + endline_slope * (endlineX3 - x1), x2: endlineX4, y2: y1 + endline_slope * (endlineX4 - x1)});
+      }
 
       // Update distance value 
       text.set('text', line_distance + 'px');
@@ -320,7 +375,9 @@
 
       // Mouse Up functions
       canvas.on('mouse:up', function(o) {
+      // Exit function if measuring not true
       if (!measuring) return;
+        // Drawing mode should be false so no more drawings occur
         canvas.isDrawingMode = false;
         line.setCoords();
       });
