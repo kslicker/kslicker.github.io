@@ -1,3 +1,9 @@
+canvas {
+    border:1px solid #000000; 
+    position: absolute; 
+    width: 50%;
+    margin-left: 70px;
+}
 
 .side-menu {
     position: fixed;
