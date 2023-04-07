@@ -5,7 +5,6 @@ $(document).ready(function(){
 
 // Create a Fabric wrapper around native canvas element
 var canvas = new fabric.Canvas('canvas');
-console.log(canvas);
 
 var circle = new fabric.Circle({
     radius: 20, fill: 'green', left: 100, top: 100
@@ -18,4 +17,3 @@ var line = new fabric.Line((20,20,50,50),{
   });
   
 canvas.add(circle, triangle, line);
-console.log(triangle);
