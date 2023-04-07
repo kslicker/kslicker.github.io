@@ -1,15 +1,6 @@
-body {
-    margin:0;
-    background-color: gray;
-}
-
-.canvas-div {
-    border: black;
-    z-index: 1;
-    position: absolute;
-}
 
 .side-menu {
+    position: fixed;
     width: 70px;
     background-color: rgb(36, 35, 35);
 }
