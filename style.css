@@ -1,0 +1,35 @@
+body {
+    margin:0;
+    background-color: gray;
+}
+
+.canvas-div {
+    border: black;
+    z-index: 1;
+    position: absolute;
+}
+
+.side-menu {
+    width: 70px;
+    background-color: rgb(36, 35, 35);
+}
+
+.side-menu a {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    transition: all 0.3s ease;
+    color: #808080;
+    font-size: 16px;
+}
+
+.side-menu p {
+    font-family: helvetica;
+    color: white;
+    margin-top: 0;
+    text-align: center;
+}
+
+.side-menu a:hover {
+    color: white;
+}
