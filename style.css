@@ -1,5 +1,4 @@
 canvas {
-    border:1px solid #000000; 
     position: absolute; 
     width: 50%;
     margin-left: 70px;
@@ -29,4 +28,9 @@ canvas {
 
 .side-menu a:hover {
     color: white;
+}
+
+.top-menu {
+    height: 70px;
+    background-color: lightskyblue;
 }

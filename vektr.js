@@ -4,7 +4,9 @@ $(document).ready(function(){
 });
 
 // Create a Fabric wrapper around native canvas element
-var canvas = new fabric.Canvas('canvas');
+var canvas = new fabric.Canvas('canvas', {
+    backgroundColor:'white'
+});
 
 var circle = new fabric.Circle({
     radius: 20, fill: 'green', left: 100, top: 100
