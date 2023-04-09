@@ -35,14 +35,23 @@ zoom.addEventListener("input", function() {
     canvas.setZoom(zoom.value);
 }) 
 
-// Free drawing
-canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-canvas.freeDrawingBrush.width = 5;
-canvas.freeDrawingBrush.color = 'blue';
-canvas.isDrawingMode = true;
+// Event Listeners
 
-// Event listeners
+// Erase Canvas
 document.getElementById('erase').addEventListener('click', function(){
     canvas.clear();
     canvas.backgroundColor = 'white';
+})
+
+// Select
+document.getElementById('select').addEventListener('click', function(){
+    canvas.isDrawingMode = false;
+})
+
+// Free Draw
+document.getElementById('draw').addEventListener('click', function(){
+    canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+    canvas.freeDrawingBrush.width = 5;
+    canvas.freeDrawingBrush.color = 'blue';
+    canvas.isDrawingMode = true;
 })
