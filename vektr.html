@@ -30,6 +30,8 @@
                             <li class="nav-item"><a class="nav-link" href="/sell">Sell</a></li>
                             <li class="nav-item"><a class="nav-link" href="/history">History</a></li>
                         </ul>
+                        Zoom:<span id="outputVar"></span>
+                        <input type="range" min="1" max="5" value="1" class="slider" id="zoom" style="width:25%;">
                 </div>
             </div>
         </nav>
@@ -47,13 +49,6 @@
         <div id="canvas-div" class="h-100 d-flex align-items-center justify-content-center">
             <canvas id="canvas" width="600" height="400"></canvas>
         </div>
-        <br></br>
-
-        <!-- Zoom Slider -->
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            Zoom:<span id="outputVar"></span>
-            <input type="range" min="1" max="5" value="1" class="slider" id="zoom" style="width:25%;">
-          </div>
         
           <!-- Script -->
         <script src="vektr.js"></script>
