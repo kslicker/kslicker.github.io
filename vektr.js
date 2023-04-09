@@ -21,9 +21,16 @@ var line = new fabric.Line((20,20,50,50),{
 canvas.add(circle, triangle, line);
 
 // Update Fabric canvas size
-//   window.setInterval(() => {
+//window.setInterval(() => {
 //    canvas.setDimensions({
-//        width: document.getElementById('canvas-div').clientWidth - 70,
+//        width: document.getElementById('canvas-div').clientWidth / 2,
 //        height: document.getElementById('canvas-div').clientHeight
 //    }, 1000);
 //});
+
+// Update zoom slider value
+var zoom = document.getElementById("zoom");
+zoom.addEventListener("input", function() {
+    document.getElementById("outputVar").innerHTML = zoom.value;
+    canvas.setZoom(zoom.value);
+}) 

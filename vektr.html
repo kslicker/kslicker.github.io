@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,12 +12,14 @@
         <script src="fabric.js"></script>
         <title>Vektr</title>
     </head>
-    <body style="background-color: rgb(245,245,245);">
+
+
+    <body style="background-color: rgb(240,240,240);">
 
         <!-- Top Menu -->
         <nav class="bg-light border navbar navbar-expand-md navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/"><span class="blue">C</span><span class="red">$</span><span class="yellow">5</span><span class="green">0</span> <span class="red">Finance</span></a>
+                <a class="navbar-brand" href="/">Vektr</a>
                 <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -33,7 +36,6 @@
 
         <!-- Side Menu -->
         <div class="side-menu">
-            <p>Vektr</p>
             <a href="#" data-toggle="tooltip" data-bs-placement="right" title="Select"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl"></i></a> 
             <a href="#" data-toggle="tooltip" data-bs-placement="right" title="Free Draw"><i id="draw" class="fa-solid fa-pencil fa-2xl"></i></a> 
             <a href="#" data-toggle="tooltip" data-bs-placement="right" title="Line"><i id="line" class="fa-solid fa-arrows-left-right fa-2xl"></i></a> 
@@ -41,9 +43,19 @@
             <a href="#" data-toggle="tooltip" data-bs-placement="right" title="Delete"><i id="erase" class="fa-solid fa-trash fa-2xl"></i></a>
         </div>
         
-        <div id="canvas-div" class="container-fluid">
+        <!-- Canvas for Drawing -->
+        <div id="canvas-div" class="h-100 d-flex align-items-center justify-content-center">
             <canvas id="canvas" width="600" height="400"></canvas>
         </div>
+        <br></br>
+
+        <!-- Zoom Slider -->
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            Zoom:<span id="outputVar"></span>
+            <input type="range" min="1" max="5" value="1" class="slider" id="zoom" style="width:25%;">
+          </div>
+        
+          <!-- Script -->
         <script src="vektr.js"></script>
     </body>
 </html> 

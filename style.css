@@ -2,6 +2,11 @@ canvas {
     position: absolute; 
     width: 50%;
     margin-left: 70px;
+    margin-top: 10px;
+}
+
+.slider {
+    margin-left: 70px;
 }
 
 .side-menu {
