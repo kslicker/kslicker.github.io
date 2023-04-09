@@ -34,3 +34,15 @@ zoom.addEventListener("input", function() {
     document.getElementById("outputVar").innerHTML = zoom.value;
     canvas.setZoom(zoom.value);
 }) 
+
+// Free drawing
+canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+canvas.freeDrawingBrush.width = 5;
+canvas.freeDrawingBrush.color = 'blue';
+canvas.isDrawingMode = true;
+
+// Event listeners
+document.getElementById('erase').addEventListener('click', function(){
+    canvas.clear();
+    canvas.backgroundColor = 'white';
+})
