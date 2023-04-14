@@ -3,24 +3,24 @@ $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip();
 });
 
+// Variables
+var stroke_color = 'black';
+
 // Create a Fabric wrapper around native canvas element
 var canvas = new fabric.Canvas('canvas', {
     backgroundColor:'white'
 });
 
-var circle = new fabric.Circle({
+var circle1 = new fabric.Circle({
     radius: 20, fill: 'green', left: 100, top: 100
   });
   var triangle = new fabric.Triangle({
     width: 20, height: 30, fill: 'blue', left: 50, top: 50
   });
-var line = new fabric.Line((20,20,50,50),{
-    strokeWidth: 4, stroke: 'black'
-  });
   
-canvas.add(circle, triangle, line);
+  canvas.add(circle1, triangle);
 
-// Update Fabric canvas size
+// Update Fabric canvas size to match browser window
 //window.setInterval(() => {
 //    canvas.setDimensions({
 //        width: document.getElementById('canvas-div').clientWidth / 2,
@@ -35,7 +35,7 @@ zoom.addEventListener("input", function() {
     canvas.setZoom(zoom.value);
 }) 
 
-// Event Listeners
+// Event Listeners //
 
 // Erase Canvas
 document.getElementById('erase').addEventListener('click', function(){
@@ -52,6 +52,22 @@ document.getElementById('select').addEventListener('click', function(){
 document.getElementById('draw').addEventListener('click', function(){
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
     canvas.freeDrawingBrush.width = 5;
-    canvas.freeDrawingBrush.color = 'blue';
+    canvas.freeDrawingBrush.color = stroke_color;
     canvas.isDrawingMode = true;
 })
+
+// Circle
+document.getElementById('circle').addEventListener('click', function(){
+    circle = new fabric.Circle({
+        radius: 50, stroke: stroke_color, left: 100, top: 100 
+    })
+    canvas.add(circle);
+    canvas.setActiveObject(circle);
+})
+
+// Function to get all objects on canvas
+function serializeCanvas(c) {
+    var canvasJson = JSON.stringify(c);
+    console.log(canvasJson);
+}
+ serializeCanvas(canvas);
