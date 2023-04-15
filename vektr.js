@@ -56,7 +56,7 @@ document.getElementById('select').addEventListener('click', function(){
 })
 
 // Free Draw
-document.getElementById('draw').addEventListener('click' || 'touchstart', function(){
+document.getElementById('draw').addEventListener('click', function(){
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
     canvas.freeDrawingBrush.width = 5;
     canvas.freeDrawingBrush.color = stroke_color;
@@ -64,7 +64,7 @@ document.getElementById('draw').addEventListener('click' || 'touchstart', functi
 })
 
 // Circle
-document.getElementById('circle').addEventListener('click', function(){
+document.getElementById('circle').addEventListener('click touchstart', function(){
 
     // Check if there is already a circle at this location to avoid overlapping
     //c_objects = canvas.toObject();
