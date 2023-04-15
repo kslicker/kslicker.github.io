@@ -64,7 +64,7 @@ document.getElementById('draw').addEventListener('click', function(){
 })
 
 // Circle
-document.getElementById('circle').addEventListener('click touchstart', function(){
+document.getElementById('circle').addEventListener('click touchend', function(){
 
     // Check if there is already a circle at this location to avoid overlapping
     //c_objects = canvas.toObject();
@@ -73,8 +73,6 @@ document.getElementById('circle').addEventListener('click touchstart', function(
     //        console.log('gotcha!');
     //    }
     //}
-
-    // Counters to shift circle positioning to avoid overlapping
 
     circle = new fabric.Circle({
         radius: 50, stroke: stroke_color, fill: 'transparent', left: 100 + counter, top: 100 + counter
