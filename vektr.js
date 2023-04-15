@@ -56,7 +56,7 @@ document.getElementById('select').addEventListener('click', function(){
 })
 
 // Free Draw
-document.getElementById('draw').addEventListener('click', function(){
+document.getElementById('draw').addEventListener('click' || 'touchstart', function(){
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
     canvas.freeDrawingBrush.width = 5;
     canvas.freeDrawingBrush.color = stroke_color;
