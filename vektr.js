@@ -71,4 +71,5 @@ document.getElementById('circle').addEventListener('click', function(){
     canvas.add(circle);
     canvas.setActiveObject(circle);
     counter += 10;
+    canvas.isDrawingMode = false;
 })
