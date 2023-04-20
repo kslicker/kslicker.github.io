@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/943416a943.js" crossorigin="anonymous"></script>
+    <title>K-Draw</title>
+    <style>
+        .fa-arrow-pointer:hover {
+      color: grey;
+    }
+
+      .fa-pencil:hover {
+      color: grey;
+    } 
+
+    .fa-ruler:hover {    
+      color: grey;
+    }
+
+    .fa-trash:hover {
+      color: grey;
+    }
+
+    .fa-eraser:hover {
+      color: grey;
+    }
+
+    .fa-circle-notch:hover {
+      color: grey;
+    }
+
+    .fa-play:hover {
+      color: grey;
+    }
+
+    .fa-pause:hover {
+      color: grey;
+    }
+
+    body {
+      background-color: lightgrey;
+    }
+    </style>
+  </head>
+  <body> 
+      <video autoplay playsinline webkit-playsinline muted hidden id="videoelement"></video>
+      <div class="h-100 d-flex align-items-center justify-content-center">
+        <h1>K-Draw</h1>
+      </div>
+      <div id="myDiv" class="h-100 d-flex align-items-center justify-content-center">
+          <canvas id="canvaselement" width="960" height="540" style="position: absolute; width: 50%; z-index: 0;"></canvas> 
+          <canvas id="draw" width="960" height="540" style="position: absolute; width: 50%; z-index: 1;"></canvas>
+        </div>
+      <div class="h-100 d-flex align-items-center justify-content-center">
+        <span style="padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
+        <span style="padding: 0.5em;"><i id="sketch" class="fa-solid fa-pencil fa-2xl" title="sketch"></i></span>
+        <span style="padding: 0.5em;"><i id="measure" class="fa-solid fa-ruler fa-2xl" title="measure"></i></span>
+        <span style="padding: 0.5em"><i id="circle" class="fa-solid fa-circle-notch fa-2xl" title="circle"></i></span>
+        <span style="padding: 0.5em;"><i id="eraser" class="fa-solid fa-eraser fa-2xl" title="eraser"></i></span>
+        <span style="padding: 0.5em;"><i id="clear" class="fa-solid fa-trash fa-2xl" title="clear"></i></span>
+        <span style="padding: 0.5em;"><i id="play" class="fa-solid fa-pause fa-2xl" title="play"></i></span>
+      </div>
+      <div class="h-100 d-flex align-items-center justify-content-center">
+        <span style="padding: 0.5em;"><i id="red" class="fa-solid fa-circle fa-2xl" style="color:red" title="red"></i></span>
+        <span style="padding: 0.5em;"><i id="green" class="fa-solid fa-circle fa-2xl" style="color:green" title="green"></i></span>
+        <span style="padding: 0.5em;"><i id="blue" class="fa-solid fa-circle fa-2xl" style="color:blue" title="blue"></i></span>
+        <span style="padding: 0.5em;"><i id="black" class="fa-solid fa-circle fa-2xl" style="color:black" title="black"></i></span>
+        <span style="padding: 0.5em;"><i id="white" class="fa-solid fa-circle fa-2xl" style="color: white" title="white"></i></span>
+      </div>
+      <div class="h-100 d-flex align-items-center justify-content-center">
+        Thickness: <span id="outputVar"></span>
+        <input type="range" min="1" max="15" value="5" class="slider" id="thickness" style="width:50%;">
+      </div>
+      <div class="h-100 d-flex align-items-center justify-content-center">
+        <span id="coords"></span>
+      </div>
+  
+    <script src="fabric.js"></script>
+    <script>
+      var videoelement = document.getElementById("videoelement");
+      var streamConstraints = {facingMode: 'user',
+                              audio: false,
+                              video: {
+                                width: 1280,
+                                height: 720
+                              }
+      }
+
+      // Create canvas and context for displaying video
+      var canvaselement = document.querySelector('#canvaselement');
+      var ctx = canvaselement.getContext('2d', { alpha: false });
+
+      // Create a Fabric wrapper around native canvas element and query selector for canvas dimensions
+      var draw_canvas = document.querySelector('#draw');
+      var canvas = new fabric.Canvas('draw', {
+      });
+      
+      canvas.isDrawingMode = false;
+      fabric.Object.prototype.selectable = false;
+
+      var canvasInterval = null;
+      var fps = 60;
+      let measuring = false;
+      let circle = false;
+      var line = null;
+      var line_distance = 0;
+      var circle_diameter = 0;
+      var stroke_colour = 'black';
+      var play = true;
+      let objects = [];
+      counter = 0;
+
+      // Get camera stream
+      if (videoelement) {
+          navigator.mediaDevices
+          .getUserMedia(streamConstraints)
+          .then(gotStream)
+          .catch(function (e) {
+              if (confirm("An error with camera occured:(" + e.name + ") Do you want to reload?")) {
+                  location.reload();
+              }
+          });
+      }
+
+      //if stream found 
+      function gotStream(stream) {
+          videoelement.srcObject = stream 
+          videoelement.play()
+      }
+
+      // Draw camera frame onto canvas
+       function drawImage(video) {
+         ctx.drawImage(video, 0, 0, 960, 540);
+          // Adjust fabric canvas size to match video canvas
+          responsive();
+      }
+
+      // Update Fabric canvas size
+      function responsive() {
+        canvas.setDimensions({
+            width: document.getElementById('canvaselement').clientWidth,
+            height: document.getElementById('canvaselement').clientHeight
+        });  
+    }
+
+      // Frame rate
+        canvasInterval = window.setInterval(() => {
+            if (play){
+              drawImage(videoelement);
+            }
+        }, 1000 / fps);
+
+      // Event listeners
+      document.getElementById("select").addEventListener("click", function(){
+        measuring = false;
+        circle = false;
+        canvas.isDrawingMode = false;
+      })
+
+      document.getElementById("sketch").addEventListener("click", function(){
+        canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+        canvas.freeDrawingBrush.width = thickness_slider.value;
+        canvas.freeDrawingBrush.color = stroke_colour;
+        measuring = false;
+        circle = false;
+        canvas.isDrawingMode = true;
+      })
+
+      document.getElementById("clear").addEventListener("click", function(){
+        canvas.clear()
+      })
+
+      document.getElementById("measure").addEventListener("click", function(){
+      // Create new line
+        line = new fabric.Line([10 + counter,10,100 + counter,100], {
+            strokeWidth: 2,
+            strokeLineCap: "square",
+            stroke: stroke_colour,
+            strokeUniform: true,
+            selectable: true,
+            hasControls: true,
+            scalable: false,
+            });
+
+        // Add item to canvas
+        canvas.add(line);
+
+        // Counter to offset subsequent lines
+        counter += 10;
+      })
+
+      document.getElementById("circle").addEventListener("click", function(){
+        circle = true;
+        measuring = false;
+        canvas.isDrawingMode = false;
+      })
+
+      document.getElementById("eraser").addEventListener("click", function(){
+         canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
+         canvas.freeDrawingBrush.width = thickness_slider.value;
+         canvas.isDrawingMode = true;
+         measuring = false;
+      })
+
+      document.getElementById("play").addEventListener("click", function(){
+        // Handle play/pause functionality and button change
+        if (play == true){
+          play = false;
+          document.getElementById("play").className = "fa-solid fa-play fa-2xl";
+        } else {
+          play = true;
+          document.getElementById("play").className = "fa-solid fa-pause fa-2xl";
+        }
+      })
+
+      document.getElementById("blue").addEventListener("click", function(){
+        stroke_colour = 'blue';
+        canvas.freeDrawingBrush.color = 'blue';
+      })
+
+      document.getElementById("red").addEventListener("click", function(){
+        stroke_colour = 'red';
+        canvas.freeDrawingBrush.color = 'red';
+      })
+
+      document.getElementById("green").addEventListener("click", function(){
+        stroke_colour = 'green';
+        canvas.freeDrawingBrush.color = 'green';
+      })
+
+      document.getElementById("black").addEventListener("click", function(){
+        stroke_colour = 'black';
+        canvas.freeDrawingBrush.color = 'black';
+      })
+
+      document.getElementById("white").addEventListener("click", function(){
+        stroke_colour = 'white';
+        canvas.freeDrawingBrush.color = 'white';
+      })
+
+      // Update thickness slider value
+      var thickness_slider = document.getElementById("thickness");
+      thickness_slider.addEventListener("input", function() {
+          document.getElementById("outputVar").innerHTML = thickness_slider.value;
+          canvas.freeDrawingBrush.width = thickness_slider.value;
+      }) 
+
+      // When mouse is moved
+      canvas.on('mouse:move', function(o) {
+      // If measuring not true exit function
+      if (!measuring) return; 
+
+      // If drawing mode not true exit function
+      if (!canvas.isDrawingMode) return;
+
+      // Create variable to get pointer event
+      pointer = canvas.getPointer(o.e);
+
+      // Calculate slope of line drawn
+      slope = (pointer.y - y1) / (pointer.x - x1);
+
+      // Calculate endline slope (negative reciprocal of slope)
+      endline_slope = -1 / slope;
+      
+      // Calculate line distance drawn
+      line_distance = Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2));
+
+      // Reposition anchor when mouse is moved
+      anchor2.set({left: pointer.x - 5, top: pointer.y - 5})
+
+      // Reposition line when mouse is moved
+      line.set({ x2: pointer.x, y2: pointer.y });
+
+      // Reposition endlines when mouse is moved, when slope is 0 set endlines manually as negative infinity is the result from (-1 / 0)
+      if (slope == 0){
+        endline1.set({x1: x1, y1: y1 - 10, x2: x1, y2: y1 + 10});
+        endline2.set({x1: pointer.x, y1: pointer.y - 10, x2: pointer.x, y2: pointer.y + 10});
+      } else {
+        yIntercept2 = pointer.y - endline_slope * pointer.x;
+        endlineX = pointer.x + 10 / Math.sqrt(1 + endline_slope ** 2);
+        endlineX2 = pointer.x - 10 / Math.sqrt(1 + endline_slope ** 2);
+        endline2.set({x1: endlineX, y1: pointer.y + endline_slope * (endlineX - pointer.x), x2: endlineX2, y2: pointer.y + endline_slope * (endlineX2 - pointer.x)});
+        
+        yIntercept1 = y1 - endline_slope * x1;
+        endlineX3 = x1 + 10 / Math.sqrt(1 + endline_slope ** 2);
+        endlineX4 = x1 - 10 / Math.sqrt(1 + endline_slope ** 2);
+        endline1.set({x1: endlineX3, y1: y1 + endline_slope * (endlineX3 - x1), x2: endlineX4, y2: y1 + endline_slope * (endlineX4 - x1)});
+      }
+
+      // Update distance value 
+      text.set('text', line_distance + 'px');
+
+      // Update coord readout
+      document.getElementById("coords").innerHTML = "Coordinates: X:" + Math.round(pointer.x) + ", Y:" + Math.round(pointer.y);
+
+      // Update canvas with changes
+      canvas.renderAll();
+      });
+
+      // Mouse Up functions
+      canvas.on('mouse:up', function(o) {
+      // Exit function if measuring not true
+      if (!measuring) return;
+        // Drawing mode should be false so no more drawings occur
+        canvas.isDrawingMode = false;
+        line.setCoords();
+      });
+
+      canvas.on('object:moving', function(o){
+        measuring = false;
+      });
+
+      // Circle
+      canvas.on('mouse:down', function(o) {
+      if (!circle) return;
+      canvas.isDrawingMode = true;
+      var drawingCircle = true;
+      var pointer = canvas.getPointer(o.e);
+      var target = canvas.findTarget(o.e);
+      console.log(target);
+      // If an object is found, select it instead of drawing circle
+      if (target && target.selectable){
+        canvas.setActiveObject(target);
+        drawingCircle = false;
+        canvas.isDrawingMode = false;
+        return;
+      }
+
+      x1 = pointer.x;
+      y1 = pointer.y;
+      circle = new fabric.Circle({
+          radius: 0,  
+          left: x1, top: y1,
+          stroke: stroke_colour,
+          fill: 'transparent',
+          selectable: true,
+          scalable: false
+      });
+      canvas.add(circle);
+      text = new fabric.Textbox(circle_diameter + 'px', { 
+            left: x1, 
+            top: y1,
+            width: 50,
+            selectable: true,
+            scalable: false,
+            fontSize: 18,
+            fill: stroke_colour,
+          });
+      canvas.add(text);
+      });
+
+      canvas.on('mouse:move', function(o) {
+      if (!circle) return; 
+      if (!canvas.isDrawingMode) return;
+      pointer = canvas.getPointer(o.e);
+      canvas.setActiveObject(circle);
+      // Check pointer location versus origin to determine which direction the circle should be drawn
+      if(x1 > pointer.x){
+        circle.set({left: Math.abs(pointer.x)});
+      }
+
+      if(y1 > pointer.y){
+        circle.set({top: Math.abs(pointer.y)});
+      }
+
+      line_distance = Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2));
+      console.log(line_distance);
+      circle.set({radius: line_distance});
+
+      text.set('text', Math.round(line_distance) + 'px');
+      // Update coord readout
+      document.getElementById("coords").innerHTML = pointer.x;
+      canvas.renderAll();
+      });
+
+      canvas.on('mouse:up', function(o) {
+      if (!circle) return;
+        canvas.isDrawingMode = false;
+        circle.setCoords();
+      });
+    </script>
+  </body>
+</html>
