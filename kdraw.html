@@ -89,6 +89,7 @@
       </div>
   
     <script src="fabric.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
       var videoelement = document.getElementById("videoelement");
       var streamConstraints = {facingMode: 'user',
@@ -182,7 +183,7 @@
             return;
         } 
         
-        // Prompt the user to confirm delete all
+        // Otherwise clear the canvas
         if (confirm('Do you want to clear the entire canvas?')) {
             canvas.clear();
         }
@@ -248,8 +249,8 @@
 
         // Create a third canvas to merge other two canvas
         var combinedCanvas = document.createElement('canvas');
-        combinedCanvas.width = canvas2.width;
-        combinedCanvas.height = canvas2.height;
+        combinedCanvas.width = 960;
+        combinedCanvas.height = 540;
 
         // Get context of new canvas
         var ctx2 = combinedCanvas.getContext('2d');
@@ -325,6 +326,11 @@
           document.getElementById("outputVar").innerHTML = thickness_slider.value;
           canvas.freeDrawingBrush.width = thickness_slider.value;
           stroke_width = thickness_slider.value;
+
+          // Check if there is an active object and change its stroke width
+          var activeObject = canvas.getActiveObject();
+          activeObject.set({strokeWidth: parseInt(stroke_width)});
+          console.log(activeObject);
       }) 
            
     </script>
