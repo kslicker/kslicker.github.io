@@ -175,14 +175,25 @@
       })
 
       document.getElementById("clear").addEventListener("click", function(){
-        canvas.clear()
+        // Check if there is an active object and delete it
+        var activeObject = canvas.getActiveObject();
+        if (activeObject) {
+            canvas.remove(activeObject);
+            return;
+        } 
+        
+        // Prompt the user to confirm delete all
+        if (confirm('Do you want to clear the entire canvas?')) {
+            canvas.clear();
+        }
+        else {
+            return;
+        }
       })
 
       document.getElementById("line").addEventListener("click", function(){
       // Create new line
-        var canvasOffset = canvas.getElement().getBoundingClientRect();
-        console.log(canvasOffset);
-        line = new fabric.Line([200 + canvasOffset.x,100 + canvasOffset.y,300 + canvasOffset.x,200 + canvasOffset.y], {
+        line = new fabric.Line([200,100,300,200], {
             strokeWidth: 4,
             strokeLineCap: "square",
             stroke: stroke_colour,
@@ -199,10 +210,9 @@
 
       document.getElementById("circle").addEventListener("click", function(){
         // Create new circle
-        var canvasOffset = canvas.getElement().getBoundingClientRect();
         circle = new fabric.Circle({
           radius: 75,  
-          left: 200 + canvasOffset.left, top: 100 + canvasOffset.top,
+          left: 200, top: 100,
           stroke: stroke_colour,
           strokeWidth: 4,
           fill: 'transparent',
@@ -267,26 +277,46 @@
       document.getElementById("blue").addEventListener("click", function(){
         stroke_colour = 'blue';
         canvas.freeDrawingBrush.color = 'blue';
+
+        // Check if there is an active object and set its colour to blue
+        var activeObject = canvas.getActiveObject();
+        activeObject.set({stroke:'blue'});
       })
 
       document.getElementById("red").addEventListener("click", function(){
         stroke_colour = 'red';
         canvas.freeDrawingBrush.color = 'red';
+
+        // Check if there is an active object and set its colour to red
+        var activeObject = canvas.getActiveObject();
+        activeObject.set({stroke:'red'});
       })
 
       document.getElementById("green").addEventListener("click", function(){
         stroke_colour = 'green';
         canvas.freeDrawingBrush.color = 'green';
+
+        // Check if there is an active object and set its colour to green
+        var activeObject = canvas.getActiveObject();
+        activeObject.set({stroke:'green'});
       })
 
       document.getElementById("black").addEventListener("click", function(){
         stroke_colour = 'black';
         canvas.freeDrawingBrush.color = 'black';
+
+        // Check if there is an active object and set its colour to black
+        var activeObject = canvas.getActiveObject();
+        activeObject.set({stroke:'black'});
       })
 
       document.getElementById("white").addEventListener("click", function(){
         stroke_colour = 'white';
         canvas.freeDrawingBrush.color = 'white';
+
+        // Check if there is an active object and set its colour to white
+        var activeObject = canvas.getActiveObject();
+        activeObject.set({stroke:'white'});
       })
 
       // Update thickness slider value
