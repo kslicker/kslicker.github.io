@@ -180,7 +180,9 @@
 
       document.getElementById("line").addEventListener("click", function(){
       // Create new line
-        line = new fabric.Line([200,100,300,200], {
+        var canvasOffset = canvas.getElement().getBoundingClientRect();
+        console.log(canvasOffset);
+        line = new fabric.Line([200 + canvasOffset.x,100 + canvasOffset.y,300 + canvasOffset.x,200 + canvasOffset.y], {
             strokeWidth: 4,
             strokeLineCap: "square",
             stroke: stroke_colour,
@@ -197,9 +199,10 @@
 
       document.getElementById("circle").addEventListener("click", function(){
         // Create new circle
+        var canvasOffset = canvas.getElement().getBoundingClientRect();
         circle = new fabric.Circle({
           radius: 75,  
-          left: 200, top: 100,
+          left: 200 + canvasOffset.left, top: 100 + canvasOffset.top,
           stroke: stroke_colour,
           strokeWidth: 4,
           fill: 'transparent',
