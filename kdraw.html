@@ -67,8 +67,9 @@
         <span style="padding: 0.5em;"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl" title="select"></i></span>
         <span style="padding: 0.5em;"><i id="sketch" class="fa-solid fa-pencil fa-2xl" title="sketch"></i></span>
         <span style="padding: 0.5em;"><i id="line" class="fa-solid fa-arrows-left-right fa-2xl" title="line"></i></span>
-        <span style="padding: 0.5em"><i id="circle" class="fa-regular fa-circle fa-2xl" title="circle"></i></span>
-        <span style="padding: 0.5em"><i id="rect" class="fa-regular fa-square fa-2xl" title="rectangle"></i></span>
+        <span style="padding: 0.5em"><i id="circle" class="fa-solid fa-circle fa-2xl" title="circle"></i></span>
+        <span style="padding: 0.5em"><i id="rect" class="fa-solid fa-square fa-2xl" title="rectangle"></i></span>
+        <span style="padding: 0.5em"><i id="triangle" class="fa-solid fa-play fa-2xl fa-rotate-270" title="triangle"></i></span>
         <span style="padding: 0.5em;"><i id="eraser" class="fa-solid fa-eraser fa-2xl" title="eraser"></i></span>
         <span style="padding: 0.5em;"><i id="clear" class="fa-solid fa-trash fa-2xl" title="clear"></i></span>
         <span style="padding: 0.5em;"><i id="play" class="fa-solid fa-pause fa-2xl" title="play"></i></span>
@@ -245,6 +246,22 @@
         });
         canvas.add(rect);
         canvas.setActiveObject(rect);
+        canvas.isDrawingMode = false;
+      })
+
+      document.getElementById("triangle").addEventListener("click", function(){
+        // Create new triangle
+        tri = new fabric.Triangle({
+          width: 100,  
+          height: 100,
+          stroke: stroke_colour,
+          strokeWidth: 4,
+          fill: 'transparent',
+          selectable: true,
+          scalable: false
+        });
+        canvas.add(tri);
+        canvas.setActiveObject(tri);
         canvas.isDrawingMode = false;
       })
 
