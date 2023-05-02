@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="manifest" href="manifest.json">
     <script src="https://kit.fontawesome.com/943416a943.js" crossorigin="anonymous"></script>
     <title>K-Draw</title>
     <style>
@@ -82,6 +81,13 @@
         <span style="padding: 0.5em;"><i id="black" class="fa-solid fa-circle fa-2xl" style="color:black" title="black"></i></span>
         <span style="padding: 0.5em;"><i id="white" class="fa-solid fa-circle fa-2xl" style="color: white" title="white"></i></span>
       </div>
+
+      <div class="h-100 d-flex align-items-center justify-content-center">
+        <label>Enter Text:</label>
+        <input id="text">
+        <input type="submit" onclick="text()" value="Place Text!">
+      </div>
+
       <div class="h-100 d-flex align-items-center justify-content-center">
         Thickness: <span id="outputVar"></span>
         <input type="range" min="1" max="15" value="5" class="slider" id="thickness" style="width:50%;">
@@ -106,8 +112,8 @@
       var canvaselement = document.querySelector('#canvaselement');
       var ctx = canvaselement.getContext('2d', { alpha: false });
 
-      // Create a Fabric wrapper around native canvas element and query selector for canvas dimensions
-      draw_canvas = document.querySelector('#draw');
+      // Create a Fabric wrapper around native canvas element
+      //draw_canvas = document.querySelector('#draw');
       canvas = new fabric.Canvas('draw', {
       });
       
@@ -115,7 +121,6 @@
       fabric.Object.prototype.selectable = false;
 
       var canvasInterval = null;
-      var fps = 60;
       var stroke_colour = 'black';
       var stroke_width = 1;
       var play = true;
@@ -152,6 +157,7 @@
             width: document.getElementById('canvaselement').clientWidth,
             height: document.getElementById('canvaselement').clientHeight
         });  
+        canvas.renderAll();
       }
 
       // Display mouse coordinates
@@ -161,16 +167,29 @@
       });
 
       // Frame rate
-        canvasInterval = window.setInterval(() => {
+      canvasInterval = window.setInterval(() => {
             if (play){
               drawImage(videoelement);
             }
-        }, 1000 / fps);
+        }, 16);
 
       // Event listeners
+
+      // When submit button is pressed place text onto canvas
+      function text(){
+        var text_input = document.getElementById("text").value;
+        console.log(text_input);
+        var text = new fabric.Text(text_input, {
+            left: 0, 
+            top: 0,
+            fill: stroke_colour,
+            selectable: true
+        });
+        canvas.add(text);
+        canvas.setActiveObject(text);
+      }
+
       document.getElementById("select").addEventListener("click", function(){
-        measuring = false;
-        circle = false;
         canvas.isDrawingMode = false;
       })
 
@@ -178,8 +197,6 @@
         canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
         canvas.freeDrawingBrush.width = thickness_slider.value;
         canvas.freeDrawingBrush.color = stroke_colour;
-        measuring = false;
-        circle = false;
         canvas.isDrawingMode = true;
       })
 
@@ -274,15 +291,17 @@
       document.getElementById("play").addEventListener("click", function(){
         // Handle play/pause functionality and button change
         if (play == true){
-          play = false;
-          document.getElementById("play").className = "fa-solid fa-play fa-2xl";
+        play = false;
+        document.getElementById("play").className = "fa-solid fa-play fa-2xl";
         } else {
-          play = true;
-          document.getElementById("play").className = "fa-solid fa-pause fa-2xl";
+        play = true;
+        document.getElementById("play").className = "fa-solid fa-pause fa-2xl";
         }
-      })
+    })
 
-      document.getElementById('save').addEventListener('click', function(e){
+    // Image capture interval
+    document.getElementById('save').addEventListener('click', function(e){
+
         // Get the canvas element
         const canvas1 = document.getElementById('draw');
         const canvas2 = document.getElementById('canvaselement');
