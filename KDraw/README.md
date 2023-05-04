@@ -1,0 +1,19 @@
+# K Draw
+#### Video Demo:  <URL HERE>
+## Description
+K Draw is a web based drawing app that allows you to draw over your webcam video feed. It uses HTML, CSS and Javascript. The idea came from microscope software which allows you to draw and measure over a live image from the microscope camera. Initially I was going to use basic HTML canvas objects but discovered FabricJS library which makes everything a whole lot easier and supports touchscreen. As with most things though, FabricJS comes with its own quirks which I will discuss later.
+
+## Overview
+The basic concept of the app is: live video is displayed and on top of this you can free draw, insert various shapes, download the image etc. It is mobile responsive by using Bootstrap library and icons are from FontAwesome which is, awesome! Mobile responsiveness works almost 100% except for portrait mode on phones where the video aspect isn't correct. I couldn't solve this and decided other features needed the time investment. Another bug is sometimes when saving an image the drawing layer does'nt save. It appears to be the frame rate causing this because if you reduce the frame rate the problem goes away. Again, I couldn't solve this and decided if the project was ever going to get finished I should focus on other areas.
+
+## How It Works
+navigator.mediaDevices is used to get the video and then each frame is drawn onto the HTML canvas. There is a second canvas on top of this for the FabricJS objects. Z-Index is used to keep one canvas on top of the other. Drawings and shapes are handled by FabricJS library which makes things alot easier than using the native HTML canvas library. Everytime a shape is clicked on the toolbar a new instance is created and added to the canvas. Thereafter everything is handled by FabricJS. For example resizing the shape by its control points. I did start to customize the FabricJS line to have endlines and display length in pixels but I decided it was too much for the scope of this project as I didn't get it working perfectly. Displaying line length is fairly straighforward as you can record the location of each endpoint then calculate distance between these two points using `Math.round(Math.sqrt((pointer.x - x1) ** 2 + (pointer.y - y1) ** 2))`. The endpoints were small perpendicular lines at each end of the line and these were calculated using the negative reciprocal of the main line. All this meant I had to then manage control points using custom code and this is where I decided to abandon the cusomisation.
+Once a shape or shapes have been added to the canvas the colour and thickness can be changed. This is fairly straightforward as FabricJS has a getActiveObject method which basically finds the selected/active object and from there we can set the colour or thickness. 
+```
+var activeObject = canvas.getActiveObject();
+activeObject.set({stroke:'blue'});
+```
+The live video can be paused. This is done by using a simple if statement inside the window.setInterval function. If 'play' is true then video plays, if 'play' is false then it does'nt. Finally, both canvases can be downloaded as one .png file. This is achieved by drawing both canvases onto a new canvas and then downloading that as an image. A bug here is that sometimes the top canvas i.e. FabricJS drwaings don't appear on the saved image. If the frame rate in window.setInterval is reduced then the problem disappears. So it seems when you click download, in that split second sometimes the FabricJS objects haven't rendered. I prefer to keep the frame rate high as there is nothing worse than choppy video.
+
+## Final Thoughts
+This was an enjoyable project as it made me realise how powerful HTML and JS can be. It also made me realise how fickle they can be. Trying to get everything mobile responsive can be a challenge. FabricJS is a great library with good support on StackOverflow.  
