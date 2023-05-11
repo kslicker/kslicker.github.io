@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://kit.fontawesome.com/943416a943.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <script src="fabric.js"></script>
+        <title>Vektr</title>
+    </head>
+
+
+    <body style="background-color: rgb(240,240,240);">
+
+        <!-- Top Menu -->
+        <nav class="bg-light border navbar navbar-expand-md navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Vektr</a>
+                <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar">
+                        <ul class="navbar-nav me-auto mt-2">
+                            <li class="nav-item"><a class="nav-link" href="/quote">Quote</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/buy">Buy</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/sell">Sell</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/history">History</a></li>
+                        </ul>
+                        Zoom:<span id="outputVar"></span>
+                        <input type="range" min="1" max="5" value="1" class="slider" id="zoom" style="width:25%;">
+                </div>
+            </div>
+        </nav>
+
+        <!-- Side Menu -->
+        <div class="side-menu">
+            <a href="#" data-toggle="tooltip" data-bs-placement="right" title="Select"><i id="select" class="fa-sharp fa-solid fa-arrow-pointer fa-2xl"></i></a> 
+            <a href="#" data-toggle="tooltip" data-bs-placement="right" title="Free Draw"><i id="draw" class="fa-solid fa-pencil fa-2xl"></i></a> 
+            <a href="#" data-toggle="tooltip" data-bs-placement="right" title="Line"><i id="line" class="fa-solid fa-arrows-left-right fa-2xl"></i></a> 
+            <a href="#" data-toggle="tooltip" data-bs-placement="right" title="Circle"><i id="circle" class="fa-regular fa-circle fa-2xl"></i></a>
+            <a href="#" data-toggle="tooltip" data-bs-placement="right" title="Delete"><i id="erase" class="fa-solid fa-trash fa-2xl"></i></a>
+        </div>
+        
+        <!-- Canvas for Drawing -->
+        <div id="canvas-div" class="h-100 d-flex align-items-center justify-content-center">
+            <canvas id="canvas" width="800" height="500"></canvas>
+        </div>
+        <!-- Script -->
+        <script src="vektr.js"></script>
+    </body>
+</html> 
