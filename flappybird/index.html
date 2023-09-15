@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+</head>
+<body>
+    <script>
+    
+    // Splash screen
+    let spaceBar;
+    let ground_physics;
+    let background;
+    let background2;
+    let pipes;
+    let margin;
+    let bird;
+
+    class StartMenu extends Phaser.Scene {
+        constructor() {
+            super('StartMenu');
+        }
+
+        preload() {
+            this.load.image('get_ready', 'get_ready.png');
+        }
+
+        create() {
+            this.add.image(200, 400, 'get_ready');
+        }
+
+        update() {
+            spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+            if (Phaser.Input.Keyboard.JustUp(spaceBar)) {
+                this.scene.start('game');
+                console.log("Yeah!");
+            }
+        }
+    }
+
+
+    class GamePlay extends Phaser.Scene {
+        constructor() {
+            super('game');
+        }
+
+        preload () {
+            this.load.image('ground', 'ground.png');
+            this.load.image('background', 'background.png');
+            this.load.image('bird1', 'bird1.png');
+            this.load.image('bird2', 'bird2.png');
+            this.load.image('bird3', 'bird3.png');
+            this.load.image('pipe', 'pipe.png');
+            this.load.image('pipe180', 'pipe180.png');
+        }
+
+        create() {
+            // Generate a random integer between min (inclusive) and max (inclusive)
+            function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            console.log("game started");
+
+            // Create the background sprite
+            background = this.add.sprite(0, -200, 'background').setOrigin(0, 0);
+            background2 = this.add.sprite(431, -200, 'background').setOrigin(0, 0);
+
+            // Physics for pipes
+            margin = 200;
+            pipes = this.physics.add.staticGroup();
+            for (var i = 0; i < 20; i++) {
+                let randomY = getRandomInt(200, 400);
+                pipes.create(400 + margin, randomY, 'pipe').setOrigin(0, 0).refreshBody();
+                pipes.create(400 + margin, (randomY - getRandomInt(100, 200)), 'pipe180').setOrigin(0, 1).refreshBody();
+                margin += 400;
+            }
+
+            // Physics for ground
+            ground_physics = this.physics.add.staticGroup();
+            ground_physics.create(0, 500, 'ground').setOrigin(0, 0).refreshBody();
+            ground_physics.create(468, 500, 'ground').setOrigin(0, 0).refreshBody();
+            
+            // Debugging
+            //this.physics.world.createDebugGraphic();
+            
+            // Create the bird sprite
+            bird = this.physics.add.sprite(170, 250, 'bird1'); // Adjust the position as needed
+
+            this.anims.create({
+                key: 'birdAnimation',
+                frames: [
+                    { key: 'bird1' },
+                    { key: 'bird2' },
+                    { key: 'bird3'},
+                    { key: 'bird2'}
+                ],
+                frameRate: 15, // Frames per second (e.g., 24)
+                repeat: -1 // -1 means the animation repeats indefinitely
+            });
+
+            // Play the "birdAnimation" when a specific event occurs
+            bird.play('birdAnimation');
+
+            // Check for collisions
+            this.physics.add.collider(bird, pipes, Callback);
+            this.physics.add.collider(bird, ground_physics, Callback);
+
+            function Callback() {
+                console.log("Game Over!")
+            }
+        }
+
+        update() {
+            // Scroll the ground horizontally
+            let scrollSpeed = 3; // Adjust the scrolling speed as needed
+            ground_physics.children.iterate(item => {
+                item.x -= scrollSpeed;
+                // Reset if it has gone off screen
+                if (item.x + 468 <= 0) {
+                item.x = 468;
+                }
+            })
+
+            // Scroll the background
+            background.x -= 1;
+            background2.x -= 1;
+
+            if (background.x + 431 <= 0) {
+                background.x = 429;
+            }
+            if (background2.x + 431 <= 0) {
+                background2.x = 429; 
+            }
+
+            // Scroll the pipes horizontally
+            pipes.children.iterate(item => {
+                // Remove pipe if it has gone off screen
+                //if (item.x + 100 <= 0) {
+                //    pipes.remove(item, true);
+                //}
+                // Move pipes to the left
+                item.x -= scrollSpeed;
+                item.body.x -= scrollSpeed;
+            })
+
+            // Trigger jump animation when space key is pressed
+            spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+            let isJumping = false;
+
+            if (Phaser.Input.Keyboard.JustUp(spaceBar) && !isJumping) {
+                //bird.body.setGravityY(1500);
+                bird.setVelocityY(-350); //-350
+                isJumping = true;
+            }
+
+            if (isJumping) {
+                // Apply gravity while the bird is in the air
+                bird.setGravityY(750); //750
+            }
+
+            // If bird is going up or down tilt angle
+            bird.angle = Math.min(90, bird.body.velocity.y * 0.15);
+            console.log(bird.body.velocity.y);
+        
+        }
+    }
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 400,
+        height: 600,
+        transparent: true,
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 0 }
+            }
+        },
+        scene: [
+        StartMenu, 
+        GamePlay
+        ]
+    };
+
+    var game = new Phaser.Game(config);
+    </script>
+
+</body>
+</html>
