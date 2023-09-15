@@ -35,6 +35,10 @@
                 this.scene.start('game');
                 console.log("Yeah!");
             }
+
+            game.input.on('pointerdown', function(pointer) {
+                this.scene.start('game');
+            });
         }
     }
 
