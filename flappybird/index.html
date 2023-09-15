@@ -158,15 +158,14 @@
                 //bird.body.setGravityY(1500);
                 bird.setVelocityY(-350); //-350
                 isJumping = true;
+            } else {
+                this.input.on('pointerdown', (pointer) => {
+                    if (!isJumping) {
+                        bird.setVelocityY(-350); //-350
+                        isJumping = true;
+                    }
+                });
             }
-
-            this.input.on('pointerdown', (pointer) => {
-                if (!isJumping) {
-                    bird.setVelocityY(-350); //-350
-                    isJumping = true;
-                }
-                
-            });
 
             if (isJumping) {
                 // Apply gravity while the bird is in the air
