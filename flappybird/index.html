@@ -36,7 +36,7 @@
                 console.log("Yeah!");
             }
 
-            game.input.on('pointerdown', function(pointer) {
+            this.input.on('pointerdown', (pointer) => {
                 this.scene.start('game');
             });
         }
@@ -160,6 +160,11 @@
                 isJumping = true;
             }
 
+            this.input.on('pointerdown', (pointer) => {
+                bird.setVelocityY(-350); //-350
+                isJumping = true;
+            });
+
             if (isJumping) {
                 // Apply gravity while the bird is in the air
                 bird.setGravityY(750); //750
@@ -190,6 +195,7 @@
     };
 
     var game = new Phaser.Game(config);
+
     </script>
 
 </body>
