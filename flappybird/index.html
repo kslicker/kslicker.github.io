@@ -14,6 +14,8 @@
     let pipes;
     let margin;
     let bird;
+    let isJumping;
+    let touch;
 
     class StartMenu extends Phaser.Scene {
         constructor() {
@@ -141,31 +143,28 @@
 
             // Scroll the pipes horizontally
             pipes.children.iterate(item => {
-                // Remove pipe if it has gone off screen
-                //if (item.x + 100 <= 0) {
-                //    pipes.remove(item, true);
-                //}
-                // Move pipes to the left
                 item.x -= scrollSpeed;
                 item.body.x -= scrollSpeed;
             })
 
             // Trigger jump animation when space key is pressed
             spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-            let isJumping = false;
+            isJumping = false;
 
             if (Phaser.Input.Keyboard.JustUp(spaceBar) && !isJumping) {
-                //bird.body.setGravityY(1500);
+                console.log('click');
                 bird.setVelocityY(-350); //-350
                 isJumping = true;
-            } else {
-                this.input.on('pointerdown', (pointer) => {
-                    if (!isJumping) {
-                        bird.setVelocityY(-350); //-350
-                        isJumping = true;
-                    }
-                });
-            }
+            }  
+
+            // Handle touch input
+            this.input.on('pointerdown', (pointer) => {
+                if (!isJumping) {
+                    console.log('Touch');
+                    bird.setVelocityY(-350); // Adjust the jump velocity as needed
+                    isJumping = true;
+                }
+            });
 
             if (isJumping) {
                 // Apply gravity while the bird is in the air
