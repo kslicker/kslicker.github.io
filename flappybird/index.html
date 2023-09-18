@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
 </head>
 <body>
     <script>
@@ -16,6 +16,7 @@
     let bird;
     let isJumping;
     let touch;
+    let isClicking = false;
 
     class StartMenu extends Phaser.Scene {
         constructor() {
@@ -28,19 +29,18 @@
 
         create() {
             this.add.image(200, 400, 'get_ready');
+            this.input.once('pointerdown', (pointer) => {
+                this.scene.start('game');
+            });
+
+            this.input.keyboard.once('keyup-SPACE', event =>
+            {
+                this.scene.start('game');
+            });
         }
 
         update() {
-            spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-            if (Phaser.Input.Keyboard.JustUp(spaceBar)) {
-                this.scene.start('game');
-                console.log("Yeah!");
-            }
-
-            this.input.on('pointerdown', (pointer) => {
-                this.scene.start('game');
-            });
         }
     }
 
@@ -68,7 +68,7 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
             }
 
-            console.log("game started");
+            spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
             // Create the background sprite
             background = this.add.sprite(0, -200, 'background').setOrigin(0, 0);
@@ -115,15 +115,8 @@
             this.physics.add.collider(bird, ground_physics, Callback);
 
             function Callback() {
-                console.log("Game Over!")
+                //console.log("")
             }
-
-            // Handle touch input
-            this.input.on('pointerdown', () => {
-                isJumping = true;
-                console.log('touch');
-                bird.setVelocityY(-350); //-350
-            });
         }
 
         update() {
@@ -155,7 +148,6 @@
             })
 
             // Trigger jump animation when space key is pressed
-            spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
             isJumping = false;
             console.log(isJumping);
 
@@ -165,16 +157,24 @@
                 isJumping = true;
             }  
 
+            // Handle touch input
+            if (!this.input.activePointer.isDown && isClicking == true && !isJumping) {
+                console.log('touch');
+                bird.setVelocityY(-350); //-350
+                isJumping = true;
+                isClicking = false;
+            } else if(this.input.activePointer.isDown && isClicking == false) {
+                isClicking = true;
+            }
+
             if (isJumping) {
                 // Apply gravity while the bird is in the air
                 bird.setGravityY(750); //750
-                console.log('isJumping')
+                console.log(isJumping)
             }
 
             // If bird is going up or down tilt angle
             bird.angle = Math.min(90, bird.body.velocity.y * 0.15);
-            console.log(bird.body.velocity.y);
-        
         }
     }
 
