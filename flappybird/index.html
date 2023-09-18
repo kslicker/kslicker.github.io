@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
 </head>
 <body>
     <script>
@@ -14,7 +14,7 @@
     let pipes;
     let margin;
     let bird;
-    let isJumping;
+    let isJumping = false;
     let touch;
     let isClicking = false;
 
@@ -117,6 +117,15 @@
             function Callback() {
                 //console.log("")
             }
+            
+            // Input for jumping
+            const jump = () => {
+                isJumping = true
+                bird.setVelocityY(-350); //-350
+            };
+
+            this.input.keyboard.on('keyup-SPACE', event => jump());
+            this.input.on('pointerup', event => jump());
         }
 
         update() {
@@ -148,24 +157,23 @@
             })
 
             // Trigger jump animation when space key is pressed
-            isJumping = false;
-            console.log(isJumping);
+            //isJumping = false;
 
-            if (Phaser.Input.Keyboard.JustUp(spaceBar) && !isJumping) {
-                console.log('click');
-                bird.setVelocityY(-350); //-350
-                isJumping = true;
-            }  
+            //if (Phaser.Input.Keyboard.JustUp(spaceBar) && !isJumping) {
+            //    console.log('click');
+            //    bird.setVelocityY(-350); //-350
+            //    isJumping = true;
+            //}  
 
             // Handle touch input
-            if (!this.input.activePointer.isDown && isClicking == true && !isJumping) {
-                console.log('touch');
-                bird.setVelocityY(-350); //-350
-                isJumping = true;
-                isClicking = false;
-            } else if(this.input.activePointer.isDown && isClicking == false) {
-                isClicking = true;
-            }
+            //if (!this.input.activePointer.isDown && isClicking == true && !isJumping) {
+            //    console.log('touch');
+            //    bird.setVelocityY(-350); //-350
+            //    isJumping = true;
+            //    isClicking = false;
+            //} else if(this.input.activePointer.isDown && isClicking == false) {
+            //    isClicking = true;
+            //}
 
             if (isJumping) {
                 // Apply gravity while the bird is in the air
