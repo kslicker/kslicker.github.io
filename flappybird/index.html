@@ -6,7 +6,6 @@
 <body>
     <script>
     
-    // Splash screen
     let spaceBar;
     let ground_physics;
     let background;
@@ -17,33 +16,13 @@
     let isJumping = false;
     let touch;
     let isClicking = false;
-
-    class StartMenu extends Phaser.Scene {
-        constructor() {
-            super('StartMenu');
-        }
-
-        preload() {
-            this.load.image('get_ready', 'get_ready.png');
-        }
-
-        create() {
-            this.add.image(200, 400, 'get_ready');
-            this.input.once('pointerdown', (pointer) => {
-                this.scene.start('game');
-            });
-
-            this.input.keyboard.once('keyup-SPACE', event =>
-            {
-                this.scene.start('game');
-            });
-        }
-
-        update() {
-
-        }
-    }
-
+    let flap;
+    let ding;
+    let started = false;
+    let get_ready;
+    let title;
+    let score;
+    let value = 0;
 
     class GamePlay extends Phaser.Scene {
         constructor() {
@@ -51,16 +30,27 @@
         }
 
         preload () {
+            this.load.image('get_ready', 'get_ready.png');
+            this.load.image('flappybird', 'flappybird.png');
+
             this.load.image('ground', 'ground.png');
             this.load.image('background', 'background.png');
             this.load.image('bird1', 'bird1.png');
             this.load.image('bird2', 'bird2.png');
             this.load.image('bird3', 'bird3.png');
-            this.load.image('pipe', 'pipe.png');
-            this.load.image('pipe180', 'pipe180.png');
+            this.load.image('pipe', 'pipe2.png');
+            this.load.image('pipe180', 'pipe2 180.png');
+            this.load.audio('flap', 'flap.mp3');
+            this.load.audio('ding', 'score.wav');
         }
 
         create() {
+            // Boundary collision
+            const barrier = this.physics.add.staticGroup();
+
+            // Top barrier
+            barrier.create(0, 0, 'background').setOrigin(0, 1).refreshBody();
+
             // Generate a random integer between min (inclusive) and max (inclusive)
             function getRandomInt(min, max) {
             min = Math.ceil(min);
@@ -69,6 +59,8 @@
             }
 
             spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+            flap = this.sound.add('flap');
+            ding = this.sound.add('ding');
 
             // Create the background sprite
             background = this.add.sprite(0, -200, 'background').setOrigin(0, 0);
@@ -83,6 +75,7 @@
                 pipes.create(400 + margin, (randomY - getRandomInt(100, 200)), 'pipe180').setOrigin(0, 1).refreshBody();
                 margin += 400;
             }
+            
 
             // Physics for ground
             ground_physics = this.physics.add.staticGroup();
@@ -103,29 +96,41 @@
                     { key: 'bird3'},
                     { key: 'bird2'}
                 ],
-                frameRate: 15, // Frames per second (e.g., 24)
+                frameRate: 10, // Frames per second (e.g., 24)
                 repeat: -1 // -1 means the animation repeats indefinitely
             });
 
             // Play the "birdAnimation" when a specific event occurs
             bird.play('birdAnimation');
 
+            const Callback = () => {
+                started = false;
+                isJumping = false;
+                value = 0;
+                this.registry.destroy(); // destroy registry
+                this.events.off(); // disable all active events
+                this.scene.restart(); // restart current scene
+            };
+
             // Check for collisions
             this.physics.add.collider(bird, pipes, Callback);
             this.physics.add.collider(bird, ground_physics, Callback);
-
-            function Callback() {
-                //console.log("")
-            }
+            this.physics.add.collider(bird, barrier);
             
             // Input for jumping
             const jump = () => {
                 isJumping = true
                 bird.setVelocityY(-350); //-350
+                flap.play();
+                started = true;
             };
 
             this.input.keyboard.on('keyup-SPACE', event => jump());
             this.input.on('pointerup', event => jump());
+
+            get_ready = this.add.image(200, 400, 'get_ready');
+            title = this.add.image(200, 100, 'flappybird');
+            score = this.add.text(200, 50, '', { font: '55px Arial', fill: '#ffffff' }).setOrigin(0.5, 0.5);
         }
 
         update() {
@@ -151,34 +156,27 @@
             }
 
             // Scroll the pipes horizontally
-            pipes.children.iterate(item => {
-                item.x -= scrollSpeed;
-                item.body.x -= scrollSpeed;
-            })
+            if (started) {
+                pipes.children.iterate(item => {
+                    item.x -= scrollSpeed;
+                    item.body.x -= scrollSpeed;
 
-            // Trigger jump animation when space key is pressed
-            //isJumping = false;
+                    // Check if bird has passed pipe and update score
+                    if (bird.x == item.x + 100 || bird.x == item.x + 101 || bird.x == item.x + 102) {
+                        ding.play();
+                        value += .5;
+                    }
+                })
 
-            //if (Phaser.Input.Keyboard.JustUp(spaceBar) && !isJumping) {
-            //    console.log('click');
-            //    bird.setVelocityY(-350); //-350
-            //    isJumping = true;
-            //}  
-
-            // Handle touch input
-            //if (!this.input.activePointer.isDown && isClicking == true && !isJumping) {
-            //    console.log('touch');
-            //    bird.setVelocityY(-350); //-350
-            //    isJumping = true;
-            //    isClicking = false;
-            //} else if(this.input.activePointer.isDown && isClicking == false) {
-            //    isClicking = true;
-            //}
+                // Remove title info and update score
+                get_ready.setVisible(false);
+                title.setVisible(false);
+                score.setText(`${value}`);
+            }
 
             if (isJumping) {
                 // Apply gravity while the bird is in the air
                 bird.setGravityY(750); //750
-                console.log(isJumping)
             }
 
             // If bird is going up or down tilt angle
@@ -197,8 +195,7 @@
                 gravity: { y: 0 }
             }
         },
-        scene: [
-        StartMenu, 
+        scene: [ 
         GamePlay
         ]
     };
