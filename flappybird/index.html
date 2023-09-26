@@ -20,10 +20,19 @@
     let flap;
     let ding;
     let started = false;
+    let gameOver = false;
+    let called = false;
     let get_ready;
     let title;
     let score;
+    let controlHint;
     let value = 0;
+    let numberOfpipes = 30;
+    let space;
+    let touchInput;
+    let pipeCollision;
+    let groundCollision;
+    let topBarrier;
 
     class GamePlay extends Phaser.Scene {
         constructor() {
@@ -32,8 +41,8 @@
 
         preload () {
             this.load.image('get_ready', 'get_ready.png');
+            this.load.image('game_over', 'game_over.png');
             this.load.image('flappybird', 'flappybird.png');
-
             this.load.image('ground', 'ground.png');
             this.load.image('background', 'background.png');
             this.load.image('bird1', 'bird1.png');
@@ -46,6 +55,11 @@
         }
 
         create() {
+            this.anims.remove('birdAnimation');
+            this.registry.destroy(); // destroy registry
+            gameOver = false;
+            called = false;
+
             // Boundary collision
             const barrier = this.physics.add.staticGroup();
 
@@ -59,7 +73,19 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
             }
 
-            spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+            // Input for jumping
+            const jump = () => {
+                isJumping = true
+                bird.setVelocityY(-350); //-350
+                flap.play();
+                started = true;
+            };
+
+            // Controls
+            this.input.keyboard.on('keyup-SPACE', jump);
+            this.input.on('pointerup', jump);
+
+            // Sound
             flap = this.sound.add('flap');
             ding = this.sound.add('ding');
 
@@ -70,13 +96,12 @@
             // Physics for pipes
             margin = 200;
             pipes = this.physics.add.staticGroup();
-            for (var i = 0; i < 20; i++) {
+            for (var i = 0; i < numberOfpipes; i++) { // Adjust number of pipes here
                 let randomY = getRandomInt(200, 400);
                 pipes.create(400 + margin, randomY, 'pipe').setOrigin(0, 0).refreshBody();
-                pipes.create(400 + margin, (randomY - getRandomInt(100, 200)), 'pipe180').setOrigin(0, 1).refreshBody();
+                pipes.create(400 + margin, (randomY - getRandomInt(125, 200)), 'pipe180').setOrigin(0, 1).refreshBody();
                 margin += 400;
             }
-            
 
             // Physics for ground
             ground_physics = this.physics.add.staticGroup();
@@ -101,53 +126,62 @@
                 repeat: -1 // -1 means the animation repeats indefinitely
             });
 
-            // Play the "birdAnimation" when a specific event occurs
+            // Play the "birdAnimation"
             bird.play('birdAnimation');
 
+            // Callback for collision actions
             const Callback = () => {
-                started = false;
-                isJumping = false;
-                value = 0;
-                this.registry.destroy(); // destroy registry
-                this.events.off(); // disable all active events
-                this.scene.restart(); // restart current scene
+                if (!called) {
+                    console.log('callback');
+                    this.add.image(200, 200, 'game_over');
+                    this.physics.world.removeCollider(pipeCollision);
+                    gameOver = true;
+                    bird.setVelocityY(300);
+                    bird.stop('birdAnimation');
+                    this.input.keyboard.off('keyup-SPACE', jump);
+                    this.input.off('pointerup', jump);
+
+                    setTimeout(() => {
+                        value = 0;
+                        isJumping = false;
+                        started = false;
+                        this.events.off(); // disable all active events
+                        this.scene.restart(); // restart current scene
+                    }, 2000);
+                    called = true;
+                }
             };
 
             // Check for collisions
-            this.physics.add.collider(bird, pipes, Callback);
-            this.physics.add.collider(bird, ground_physics, Callback);
-            this.physics.add.collider(bird, barrier);
-            
-            // Input for jumping
-            const jump = () => {
-                isJumping = true
-                bird.setVelocityY(-350); //-350
-                flap.play();
-                started = true;
-            };
-
-            this.input.keyboard.on('keyup-SPACE', event => jump());
-            this.input.on('pointerup', event => jump());
+            pipeCollision = this.physics.add.collider(bird, pipes, Callback);
+            groundCollision = this.physics.add.collider(bird, ground_physics, Callback);
+            topBarrier = this.physics.add.collider(bird, barrier);
 
             get_ready = this.add.image(200, 400, 'get_ready');
             title = this.add.image(200, 100, 'flappybird');
             score = this.add.text(200, 50, '', { font: '55px Arial', fill: '#ffffff' }).setOrigin(0.5, 0.5);
+            controlHint = this.add.text(200, 450, 'Press Space or Tap!', { font: '32px Arial', fill: '#ffffff' }).setOrigin(0.5, 0.5);
         }
 
         update() {
             // Scroll the ground horizontally
             let scrollSpeed = 3; // Adjust the scrolling speed as needed
-            ground_physics.children.iterate(item => {
-                item.x -= scrollSpeed;
-                // Reset if it has gone off screen
-                if (item.x + 468 <= 0) {
-                item.x = 468;
-                }
-            })
+
+            if (!gameOver) {
+                ground_physics.children.iterate(item => {
+                    item.x -= scrollSpeed;
+                    // Reset if it has gone off screen
+                    if (item.x + 468 <= 0) {
+                        item.x = 468;
+                    }
+                })
+            }
 
             // Scroll the background
-            background.x -= 1;
-            background2.x -= 1;
+            if (!gameOver) {
+                background.x -= 1;
+                background2.x -= 1;
+            }
 
             if (background.x + 431 <= 0) {
                 background.x = 429;
@@ -157,7 +191,7 @@
             }
 
             // Scroll the pipes horizontally
-            if (started) {
+            if (started && !gameOver) {
                 pipes.children.iterate(item => {
                     item.x -= scrollSpeed;
                     item.body.x -= scrollSpeed;
@@ -172,6 +206,7 @@
                 // Remove title info and update score
                 get_ready.setVisible(false);
                 title.setVisible(false);
+                controlHint.setVisible(false);
                 score.setText(`${value}`);
             }
 
@@ -182,6 +217,25 @@
 
             // If bird is going up or down tilt angle
             bird.angle = Math.min(90, bird.body.velocity.y * 0.15);
+
+            // If past the last pipe you win
+            if (value == numberOfpipes) {
+            setTimeout(() => {
+                this.add.text(200, 200, 'Congratulations!', { font: '32px Arial', fill: '#ffffff' }).setOrigin(0.5, 0.5);
+                this.add.text(200, 250, 'You Win', { font: '32px Arial', fill: '#ffffff' }).setOrigin(0.5, 0.5);
+                this.scene.pause();
+            }, 1000);
+                
+            setTimeout(() => {
+                value = 0;
+                isJumping = false;
+                started = false;
+                this.registry.destroy(); // destroy registry
+                this.events.off(); // disable all active events
+                this.scene.restart(); // restart current scene
+                this.anims.remove('birdAnimation');
+            }, 4000); // Pause for 2 seconds (2000 milliseconds)
+            }
         }
     }
 
