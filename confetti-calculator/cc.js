@@ -1,6 +1,6 @@
 //// Confetti Effect ////
 var myCanvas = document.createElement('canvas');
-myCanvas.style.position = 'fixed';
+myCanvas.style.position = 'absolute';
 myCanvas.style.top = 0;
 myCanvas.style.left = 0;
 myCanvas.style.width = '100%';
@@ -83,7 +83,7 @@ document.getElementById('-').addEventListener('click', function(e) {
 
 document.getElementById('1').addEventListener('click', function(e) {
     document.getElementById('display').innerText += "1";
-    
+    makeConfetti(e);
 });
 
 document.getElementById('2').addEventListener('click', function(e) {
