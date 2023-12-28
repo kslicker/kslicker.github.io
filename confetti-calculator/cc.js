@@ -1,6 +1,6 @@
 //// Confetti Effect ////
 var myCanvas = document.createElement('canvas');
-myCanvas.style.position = 'absolute';
+myCanvas.style.position = 'fixed';
 myCanvas.style.top = 0;
 myCanvas.style.left = 0;
 myCanvas.style.width = '100%';
