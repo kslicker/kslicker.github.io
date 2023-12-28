@@ -1,9 +1,13 @@
 body {
     width: 50%;
     margin: 0 auto;
+    background-image: linear-gradient(to bottom right, red, yellow);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 h1 {
+    color: rgb(65, 65, 65);
     text-align: center;
     font-family: sans-serif;
     font-weight: bold;
@@ -14,7 +18,7 @@ h1 {
 }
 
 .display {
-    background-color: black;
+    background-color: rgb(65, 65, 65);
     margin-left: 25%;
     margin-right: 25%;
     justify-content: flex-end;
