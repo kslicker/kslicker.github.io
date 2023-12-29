@@ -119,6 +119,8 @@ document.getElementById('=').addEventListener('click', function(e) {
         document.getElementById('display').innerText = " ";
     } else if (result != undefined) {
         document.getElementById('display').innerText = result;
+        let numberToWord = numbered.stringify(result);
+        document.getElementById('words').innerText = numberToWord.charAt(0).toUpperCase() + numberToWord.slice(1);
     } else {
         document.getElementById('display').innerText = "invalid";
     }
