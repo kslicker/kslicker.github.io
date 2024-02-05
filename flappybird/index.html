@@ -243,7 +243,7 @@
 
                 // If bird is going up or down tilt angle
                 bird.angle = Math.min(90, bird.body.velocity.y * 0.15);
-
+                            
                 // If past the last pipe you win
                 if (value == numberOfpipes) {
                     setTimeout(() => {
@@ -251,7 +251,7 @@
                         this.add.text(200, 250, 'You Win', { font: '32px Arial', fill: '#ffffff' }).setOrigin(0.5, 0.5);
                         this.scene.pause();
                     }, 1000);
-
+                    
                     setTimeout(() => {
                         value = 0;
                         isJumping = false;
