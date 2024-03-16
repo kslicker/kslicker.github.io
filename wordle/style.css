@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#heading-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: rgb(78, 78, 78);
+    font-family: sans-serif;
+    color: white;
+    height: 100px;
+}
+
+#grid-canvas {
+    margin: auto;
+    display: block;
+    border: 1px solid;
+    image-rendering: pixelated;
+}
+
+#canvas-div {
+    margin: 5px;
+}
+
+#keyboard {
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+#keyboard button {
+    margin: 1px;
+    padding: 10px;
+    background: rgb(179, 179, 179);
+    color: black;
+    border: none;
+    border-radius: 5px;
+    transition: background-color .5s ease;
+}
+
+#keyboard button:hover {
+    background-color: grey;
+}
