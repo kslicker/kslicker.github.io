@@ -9,8 +9,9 @@ const filteredArray = [...new Set(keyboardArray)];
 
 // Get word list from server
 async function getWords() {
-    const response = await fetch("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt");
+    const response = await fetch("5letter_word_list.txt");
     words = await response.text();
+    console.log(words);
     processWords();
   }
 
@@ -20,8 +21,7 @@ let wordListUpperCase = [];
 
 function processWords() {
     const wordArray = words.split("\n");
-    wordList = wordArray.filter(word => word.length === 6);
-    wordListUpperCase = wordList.map(word => word.toUpperCase().trim());
+    wordListUpperCase = wordArray.map(word => word.toUpperCase().trim());
     const randomIndex = Math.floor(Math.random() * wordListUpperCase.length)
     todaysWord = wordListUpperCase[randomIndex];
     console.log(todaysWord);
@@ -173,7 +173,7 @@ function addCharacter(char) {
                 resetGame();
             }, 500);
         } else if (guessCount === 5) {
-            alert("game over!");
+            alert(`Game Over! Todays word was ${todaysWord}`);
             resetGame();
         } else if (!wordListUpperCase.includes(guess)) {
             alert("Not in word list!");
