@@ -11,7 +11,6 @@ const filteredArray = [...new Set(keyboardArray)];
 async function getWords() {
     const response = await fetch("5letter_word_list.txt");
     words = await response.text();
-    console.log(words);
     processWords();
   }
 
