@@ -7,7 +7,7 @@ const keyboard = document.getElementById("keyboard-div");
 const keyboardArray = Array.from(keyboard.innerText).filter(char => char >= 'A' && char <= 'Z');
 const filteredArray = [...new Set(keyboardArray)];
 
-// Get word list from server
+// Get word list from file
 async function getWords() {
     const response = await fetch("5letter_word_list.txt");
     words = await response.text();
@@ -49,6 +49,11 @@ function resetGame() {
             guesses[i][j] = "";
         }
     }
+
+    // Reset todays word
+    const randomIndex = Math.floor(Math.random() * wordListUpperCase.length)
+    todaysWord = wordListUpperCase[randomIndex];
+    console.log(todaysWord);
 
     // Reset guess word, counter and keyboard colours
     guess = "";
