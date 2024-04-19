@@ -106,8 +106,6 @@ function draw(guesses) {
                 const greenButtonElement = document.getElementById(todaysWord[j]);
                 greenButtonElement.style.backgroundColor = "#30b337";
             } else if (todaysWord.includes(guesses[i][j]) && countOccurrences(todaysWord, guesses[i][j]) >= countOccurrences(guesses[i], guesses[i][j]) && guessCount > i) {
-                console.log("Today's word:" + countOccurrences(todaysWord, guesses[i][j]));
-                console.log("Guess:" + countOccurrences(guesses[i], guesses[i][j]));
                 ctx.fillStyle = "#07c7f7";
                 ctx.fillRect(0 + xMargin, 0 + yMargin, squareSize, squareSize);
                 ctx.fillStyle = "white";

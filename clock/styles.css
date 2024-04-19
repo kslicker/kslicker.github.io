@@ -1,0 +1,17 @@
+#header-div {
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 44;
+}
+
+#clock-div {
+    margin: auto;
+    width: 75%;
+    text-align: center;
+}
+
+#text-div {
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 34px;
+}
