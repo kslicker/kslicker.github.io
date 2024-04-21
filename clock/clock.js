@@ -146,6 +146,8 @@ function rotateHands() {
         textOutput.innerText = `Quarter past ${hours % 12}`;
     } else if (minutes == 45) {
         textOutput.innerText = `Quarter to ${hours % 12 + 1}`;
+    } else if (minutes == 0) {
+        textOutput.innerText = `${hours} O'Clock`
     }
     
 
