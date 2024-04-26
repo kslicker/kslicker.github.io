@@ -110,6 +110,14 @@ clock.appendChild(secondHand);
 let axisX = 150;
 let axisY = 150;
 
+// Text to speech function
+function textToSpeech() {
+    const text = textOutput.textContent;
+    console.log(text);
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
+}
+
 // Function to rotate hands
 function rotateHands() {
     // Get current time
@@ -120,7 +128,6 @@ function rotateHands() {
     const milliseconds = time.getMilliseconds();
 
     // Set angles for each hand
-    console.log(time.getMilliseconds());
     const secondHandAngle = seconds * 6;
     const minuteHandAngle = minutes * 6;
 
