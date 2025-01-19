@@ -1,19 +1,15 @@
 const board = document.getElementById('game-board'); // Game board element
 const score = document.getElementById('score'); // Score element
-
 const upButton = document.getElementsByClassName('up'); // Up button element
 const downButton = document.getElementsByClassName('down'); // Down button element
 const leftButton = document.getElementsByClassName('left'); // Left button element
 const rightButton = document.getElementsByClassName('right'); // Right button element
-
-upButton[0].addEventListener('click', () => { direction = 'up'; });
-
 const gridSize = 10; // Size of the game grid
 let snakeParts = [{ x: 2, y: 5 }]; // Initial snake position
 let foodX = 7, foodY = 7; // Initial food position
 let direction = 'right'; // Initial direction
 let scoreVariable = 0; // Score counter
-let isGameOver = false;
+let isGameOver = false; // Game over flag
 
 // Draw food on the board
 function drawFood() {
@@ -113,7 +109,7 @@ function restartGame() {
     gameInterval = setInterval(gameLoop, 400);
 }
 
-// Handle direction change
+// Handle direction change with keys
 window.addEventListener('keydown', (event) => {
     const keyDirectionMap = {
         ArrowUp: 'up',
@@ -131,11 +127,19 @@ window.addEventListener('keydown', (event) => {
 
     const newDirection = keyDirectionMap[event.key];
     if (newDirection) {
-        // Allow direction change only if not reversing and snake has more than one part
+        // Allow direction change only if not reversing or snake has more than one part
         if (snakeParts.length < 2 || direction !== oppositeDirections[newDirection]) {
             direction = newDirection;
         }
     }
+});
+
+// Handle direction change with on-screen buttons
+upButton[0].addEventListener('click', () => {
+    // Allow direction change only if not reversing or snake has more than one part
+    if (snakeParts.length < 2 || direction !== 'down') {
+        direction = 'up';
+    } 
 });
 
 // Attach restart button event listener
