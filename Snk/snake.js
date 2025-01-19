@@ -142,6 +142,24 @@ upButton[0].addEventListener('click', () => {
     } 
 });
 
+downButton[0].addEventListener('click', () => { 
+    if (snakeParts.length < 2 || direction !== 'up') {
+        direction = 'down';
+    }
+});
+
+leftButton[0].addEventListener('click', () => {
+    if (snakeParts.length < 2 || direction !== 'right') {
+        direction = 'left';
+    }
+});
+
+rightButton[0].addEventListener('click', () => {
+    if (snakeParts.length < 2 || direction !== 'left') {
+        direction = 'right';
+    }
+});
+
 // Attach restart button event listener
 document.getElementById('restart-button').addEventListener('click', restartGame);
 
