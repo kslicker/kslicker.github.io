@@ -1,5 +1,13 @@
 const board = document.getElementById('game-board'); // Game board element
 const score = document.getElementById('score'); // Score element
+
+const upButton = document.getElementsByClassName('up'); // Up button element
+const downButton = document.getElementsByClassName('down'); // Down button element
+const leftButton = document.getElementsByClassName('left'); // Left button element
+const rightButton = document.getElementsByClassName('right'); // Right button element
+
+upButton[0].addEventListener('click', () => { direction = 'up'; });
+
 const gridSize = 10; // Size of the game grid
 let snakeParts = [{ x: 2, y: 5 }]; // Initial snake position
 let foodX = 7, foodY = 7; // Initial food position
