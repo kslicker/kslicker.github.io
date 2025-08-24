@@ -6,54 +6,108 @@
   <title>My Projects</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #999999;
-      color: #ffffff;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      color: #333;
     }
     header {
-      background-color: #999999;
-      color: #ffffff;
-      padding: 2rem;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      padding: 3rem 2rem;
       text-align: center;
     }
-    main {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: #f77526;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
     }
-    h1, h2 {
+    header p {
+      margin-top: 0.5rem;
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    main {
+      max-width: 900px;
+      margin: -2rem auto 2rem;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      animation: fadeIn 1s ease-in-out;
+    }
+    h2 {
       margin-top: 0;
+      color: #2c5364;
+    }
+    p {
+      line-height: 1.6;
     }
     footer {
       text-align: center;
-      padding: 1rem;
-      background-color: #999999;
-      color: #ffffff;
+      padding: 1.5rem;
+      background: #2c5364;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.7rem 1.2rem;
+      background: #2c5364;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #203a43;
+    }
+    .links {
       margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .links a {
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      background: #2c5364;
+      color: #fff;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .links a:hover {
+      background: #203a43;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Welcome to My GitHub Page</h1>
-    <p>Kieran Slicker</p>
+    <h1>Welcome to My GitHub Pages</h1>
+    <p>Hobbyist Software Developer</p>
   </header>
   <main>
     <h2>About Me</h2>
     <p>Hello! I'm a hobbyist software developer who enjoys building apps and experimenting with new ideas. I love learning and sharing projects with the community.</p>
 
     <h2>Microscope App</h2>
-    <p>One of my main projects is a <strong>Microscope App</strong> called MicroMac. It allows users to connect with a camera and make measurements directly on live images. I'm developing it to be simple, accurate, and useful for anyone who needs quick magnification and measurement tools.</p>
-    <p>Stay tuned for updates as I continue to improve and expand the app!</p>
-    <p>For support or general enquiries please mail me: kslicker@gmail.com</p>
+    <p>One of my main projects is a <strong>Microscope App</strong>. It allows users to connect with a camera and make measurements directly on live images. I'm developing it to be simple, accurate, and useful for anyone who needs quick magnification and measurement tools.</p>
+    <a href="#" class="btn">Learn More</a>
+
+    <h2>Connect With Me</h2>
+    <div class="links">
+      <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+      <a href="mailto:your.email@example.com">Email</a>
+      <a href="#">LinkedIn</a>
+    </div>
   </main>
   <footer>
-    <p>© 2025 My GitHub Page | Built with ❤️ by a hobbyist developer</p>
+    <p>© 2025 My GitHub Pages | Built with ❤️ by a hobbyist developer</p>
   </footer>
 </body>
 </html>
