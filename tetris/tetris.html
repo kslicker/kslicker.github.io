@@ -2,59 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Short description of this page's purpose" />
-  <title>Your Page Title</title>
-
-  <!-- Favicon -->
-  <link rel="icon" href="/favicon.ico" />
-
-  <!-- Apple touch icon -->
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-  <!-- Open Graph / Social (optional) -->
-  <meta property="og:title" content="Your Page Title" />
-  <meta property="og:description" content="Short description for social previews" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="/og-image.png" />
-
-  <!-- Preload fonts / critical assets (optional) -->
-  <!-- <link rel="preload" href="/fonts/YourFont.woff2" as="font" type="font/woff2" crossorigin> -->
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Basic theme color (mobile address bar color) -->
-  <meta name="theme-color" content="#ffffff" />
+  <title>Tetris</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Accessible skip link -->
-  <a class="skip-link" href="#main" style="position:absolute;left:-9999px;">Skip to content</a>
-
-  <!-- App root / main content -->
-  <main id="main" role="main">
-    <header>
-      <h1>Page Heading</h1>
-      <p>Short intro or tagline.</p>
-    </header>
-
-    <section>
-      <h2>Section title</h2>
-      <p>Start building your content here.</p>
-    </section>
-
-    <footer>
-      <p>&copy; <span id="year"></span> Your Name or Company</p>
-    </footer>
-  </main>
-
-  <!-- Scripts -->
-  <script>
-    // Small niceties
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
-  
-  <script src="tetris.js" defer></script>
+  <div id="tetris"></div>
 </body>
+<script src="tetris.js"></script>
 </html>
