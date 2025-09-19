@@ -1,0 +1,14 @@
+#tetris {
+  display: grid;
+  grid-template-columns: repeat(10, 24px); /* 10 columns, each 24px */
+  grid-template-rows: repeat(20, 24px);    /* 20 rows, each 24px */
+  gap: 1px;
+  background: #111;
+}
+
+.cell {
+  width: 24px;
+  height: 24px;
+  background: #222;
+  border: 1px solid #333;
+}
